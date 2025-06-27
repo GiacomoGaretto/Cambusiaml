@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calcolatore Cambusa Scout</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background-color: #3b82f6;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #2563eb;
+        }
+
+        .btn-secondary {
+            background-color: #e5e7eb;
+            color: #1f2937;
+        }
+
+        .btn-secondary:hover {
+            background-color: #d1d5db;
+        }
+
+        .btn-toggle.active {
+            background-color: #3b82f6;
+            color: white;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn-category.active {
+            background-color: #16a34a;
+            color: white;
+            box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.3);
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 8px;
+            border: 1px solid #d1d5db;
+        }
+
+        #risultato {
+            background-color: #f0fdf4;
+            border-left: 4px solid #22c55e;
+        }
+
+        .table-auto th,
+        .table-auto td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            vertical-align: middle;
+        }
+
+        .table-auto thead th {
+            border-bottom-width: 2px;
+        }
+
+        .gram-value {
+            font-size: 1.125rem;
+            /* 18px */
+            font-weight: 600;
+            color: #166534;
+            /* green-800 */
+        }
+
+        .percentage-value {
+            font-size: 0.875rem;
+            /* 14px */
+            color: #6b7280;
+            /* gray-500 */
+        }
+
+        select optgroup {
+            font-weight: bold;
+            color: #1f2937;
+            /* Aggiunto un colore per maggiore leggibilità */
+            background-color: #f9fafb;
+            /* Sfondo leggermente diverso per il gruppo */
+            padding: 4px 0;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 flex items-center justify-center min-h-screen py-8">
+    <div class="w-full max-w-3xl mx-auto p-4">
+
+        <header class="text-center mb-6">
+            <h1 class="text-4xl font-bold text-gray-800">Calcolatore Cambusa Scout <i
+                    class="fas fa-utensils text-blue-500"></i></h1>
+            <p class="text-gray-600 mt-2">Pianifica le quantità di cibo e consulta i fabbisogni nutrizionali.</p>
+        </header>
+
+        <!-- Selettore Modalità -->
+        <div class="flex justify-center gap-4 mb-6">
+            <button id="btnModeCalcolatore" class="btn btn-toggle" onclick="mostraSezione('calcolatore')">
+                <i class="fas fa-calculator mr-2"></i> Calcolatore
+            </button>
+            <button id="btnModeFabbisogno" class="btn btn-toggle btn-secondary" onclick="mostraSezione('fabbisogno')">
+                <i class="fas fa-book-open mr-2"></i> Fabbisogno Energetico
+            </button>
+        </div>
+
+        <!-- Sezione Calcolatore -->
+        <main id="calcolatoreSection" class="card">
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold text-gray-700 mb-3">1. Scegli la fascia d'età</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <button id="btnLupetti" class="btn btn-secondary btn-category text-lg"
+                        onclick="selezionaCategoria('lupetto')">
+                        <i class="fas fa-paw mr-2"></i> Lupetti (8-11 anni)
+                    </button>
+                    <button id="btnReparto" class="btn btn-secondary btn-category text-lg"
+                        onclick="selezionaCategoria('reparto')">
+                        <i class="fas fa-campground mr-2"></i> Reparto (12-15 anni)
+                    </button>
+                </div>
+                <input type="hidden" id="categoriaSelezionata" value="">
+            </div>
+
+            <div id="inputSection" class="hidden">
+                <h2 class="text-xl font-semibold text-gray-700 mb-4">2. Inserisci i dati</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <label for="numRagazzi" id="labelRagazzi"
+                            class="block text-sm font-medium text-gray-700 mb-1">Numero Ragazzi</label>
+                        <input type="number" id="numRagazzi" class="input-field" placeholder="Es. 20" min="0">
+                    </div>
+                    <div>
+                        <label for="numAdulti" class="block text-sm font-medium text-gray-700 mb-1">Numero
+                            Adulti</label>
+                        <input type="number" id="numAdulti" class="input-field" placeholder="Es. 5" min="0">
+                    </div>
+                    <div>
+                        <label for="alimento" class="block text-sm font-medium text-gray-700 mb-1">Tipo di
+                            Alimento</label>
+                        <select id="alimento" class="input-field"></select>
+                    </div>
+                    <div>
+                        <label for="numPasti" class="block text-sm font-medium text-gray-700 mb-1">Numero di
+                            Pasti</label>
+                        <input type="number" id="numPasti" class="input-field" placeholder="Es. 3" min="1">
+                    </div>
+                </div>
+                <button id="calcolaBtn" class="btn btn-primary w-full text-lg" onclick="calcolaQuantita()">
+                    <i class="fas fa-calculator mr-2"></i> Calcola Quantità
+                </button>
+            </div>
+
+            <div id="risultato" class="mt-8 p-6 rounded-lg hidden">
+                <h3 class="text-2xl font-bold text-gray-800 mb-4">Quantità Totale Necessaria</h3>
+                <div id="dettaglioCalcolo" class="text-sm text-gray-600 mb-4"></div>
+                <div id="output" class="text-3xl font-bold text-green-700"></div>
+                <div id="outputUnita" class="text-xl font-semibold text-green-600 mt-1"></div>
+            </div>
+            <div id="messaggioErrore"
+                class="hidden mt-4 p-4 text-red-800 bg-red-100 border-l-4 border-red-500 rounded-lg"></div>
+        </main>
+
+        <!-- Sezione Fabbisogno Energetico -->
+        <section id="fabbisognoSection" class="card hidden">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4 text-center">Fabbisogno Energetico e Macronutrienti</h2>
+            <p class="text-gray-600 mb-6 text-center">Valori medi giornalieri di riferimento per uno stile di vita
+                attivo, come quello di un campo scout.</p>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left table-auto">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="text-base font-semibold text-gray-700">Nutriente</th>
+                            <th class="text-base font-semibold text-gray-700 text-center">Lupetti (8-11 anni)</th>
+                            <th class="text-base font-semibold text-gray-700 text-center">Reparto (12-15 anni)</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white">
+                        <tr>
+                            <td class="font-medium text-gray-800">Fabbisogno Calorico</td>
+                            <td class="text-center font-semibold text-lg text-blue-600">~ 2100 Kcal</td>
+                            <td class="text-center font-semibold text-lg text-blue-600">~ 2500 Kcal</td>
+                        </tr>
+                        <tr class="bg-gray-50">
+                            <td class="font-medium text-gray-800">Proteine</td>
+                            <td class="text-center">
+                                <div class="gram-value">~ 70 g</div>
+                                <div class="percentage-value">(12-15% Kcal)</div>
+                            </td>
+                            <td class="text-center">
+                                <div class="gram-value">~ 85 g</div>
+                                <div class="percentage-value">(12-15% Kcal)</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="font-medium text-gray-800">Grassi</td>
+                            <td class="text-center">
+                                <div class="gram-value">~ 65 g</div>
+                                <div class="percentage-value">(25-30% Kcal)</div>
+                            </td>
+                            <td class="text-center">
+                                <div class="gram-value">~ 75 g</div>
+                                <div class="percentage-value">(25-30% Kcal)</div>
+                            </td>
+                        </tr>
+                        <tr class="bg-gray-50">
+                            <td class="font-medium text-gray-800">Carboidrati</td>
+                            <td class="text-center">
+                                <div class="gram-value">~ 275 g</div>
+                                <div class="percentage-value">(50-55% Kcal)</div>
+                            </td>
+                            <td class="text-center">
+                                <div class="gram-value">~ 330 g</div>
+                                <div class="percentage-value">(50-55% Kcal)</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <footer class="text-center mt-6">
+                <p class="text-xs text-gray-500">Fonte: Elaborazione su dati LARN (Livelli di Assunzione di Riferimento
+                    di Nutrienti ed energia per la popolazione italiana - SINU, 2014). I grammi sono calcolati su un
+                    valore energetico medio di 4 Kcal/g per proteine e carboidrati, e 9 Kcal/g per i grassi.</p>
+            </footer>
+        </section>
+
+    </div>
+
+    <!-- Modal Disclaimer -->
+    <div id="disclaimerModal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-xl shadow-2xl p-6 sm:p-8 max-w-md w-full">
+            <div class="text-center">
+                <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-amber-100 mb-4">
+                    <i class="fas fa-exclamation-triangle text-2xl text-amber-500"></i>
+                </div>
+                <h3 class="text-xl sm:text-2xl font-bold text-gray-800">Attenzione</h3>
+                <p class="mt-4 text-gray-600">
+                    Questo strumento è pensato per essere un aiuto e una guida generale. Le quantità calcolate sono
+                    delle stime basate su valori medi.
+                </p>
+                <p class="mt-2 text-gray-600">
+                    Non sostituisce la valutazione di un cambusiere esperto, che terrà conto delle esigenze specifiche
+                    del gruppo e del tipo di attività. Usalo come un ottimo punto di partenza!
+                </p>
+            </div>
+            <div class="mt-8">
+                <button id="closeModalBtn" class="btn btn-primary w-full text-lg">Ho capito, grazie!</button>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        // --- DATABASE PORZIONI (ORGANIZZATO PER CATEGORIE) ---
+        const porzioniCategorizzate = {
+            "Carboidrati e Primi Piatti": {
+                pane: { lupetto: 60, reparto: 90, adulto: 110, unita: 'g' },
+                pasta: { lupetto: 90, reparto: 120, adulto: 130, unita: 'g' },
+                patate: { lupetto: 150, reparto: 200, adulto: 250, unita: 'g' },
+                riso: { lupetto: 80, reparto: 100, adulto: 110, unita: 'g' },
+                polenta: { lupetto: 60, reparto: 80, adulto: 100, unita: 'g' },
+                couscous: { lupetto: 60, reparto: 90, adulto: 100, unita: 'g' },
+                crackers: { lupetto: 25, reparto: 35, adulto: 40, unita: 'g' }
+            },
+            "Carne, Pesce e Uova": {
+                carne_rossa: { lupetto: 100, reparto: 150, adulto: 180, unita: 'g' },
+                pesce: { lupetto: 150, reparto: 200, adulto: 220, unita: 'g' },
+                pollo: { lupetto: 120, reparto: 180, adulto: 200, unita: 'g' },
+                uova: { lupetto: 1, reparto: 2, adulto: 2, unita: 'pz' },
+                wurstel: { lupetto: 1, reparto: 2, adulto: 2, unita: 'pz' },
+                tonno: { lupetto: 50, reparto: 80, adulto: 100, unita: 'g' }
+            },
+            "Verdura e Legumi": {
+                fagioli: { lupetto: 50, reparto: 70, adulto: 80, unita: 'g' },
+                piselli: { lupetto: 80, reparto: 100, adulto: 120, unita: 'g' },
+                pomodori: { lupetto: 120, reparto: 150, adulto: 180, unita: 'g' },
+                insalata: { lupetto: 70, reparto: 90, adulto: 100, unita: 'g' },
+                carote: { lupetto: 100, reparto: 130, adulto: 150, unita: 'g' },
+                cipolle: { lupetto: 30, reparto: 40, adulto: 50, unita: 'g' },
+                zucchine: { lupetto: 120, reparto: 160, adulto: 180, unita: 'g' },
+                melanzane: { lupetto: 120, reparto: 160, adulto: 180, unita: 'g' },
+                peperoni: { lupetto: 100, reparto: 140, adulto: 160, unita: 'g' },
+                legumi_secchi: { lupetto: 40, reparto: 60, adulto: 70, unita: 'g' },
+                passata_pomodoro: { lupetto: 60, reparto: 80, adulto: 100, unita: 'g' }
+            },
+            "Frutta": {
+                mela: { lupetto: 1, reparto: 1, adulto: 1, unita: 'pz' },
+                banana: { lupetto: 1, reparto: 1, adulto: 1, unita: 'pz' },
+                pesca: { lupetto: 1, reparto: 1, adulto: 1, unita: 'pz' },
+                anguria: { lupetto: 300, reparto: 400, adulto: 500, unita: 'g' },
+                albicocca: { lupetto: 2, reparto: 3, adulto: 3, unita: 'pz' },
+                pera: { lupetto: 1, reparto: 1, adulto: 1, unita: 'pz' },
+                frutta_mista: { lupetto: 150, reparto: 200, adulto: 250, unita: 'g' }
+            },
+            "Latticini e Formaggi": {
+                latte: { lupetto: 250, reparto: 300, adulto: 300, unita: 'ml' },
+                yogurt: { lupetto: 1, reparto: 1, adulto: 1, unita: 'pz' },
+                formaggio_fresco: { lupetto: 70, reparto: 100, adulto: 120, unita: 'g' },
+                formaggio_stagionato: { lupetto: 40, reparto: 50, adulto: 60, unita: 'g' },
+                mozzarella: { lupetto: 80, reparto: 100, adulto: 120, unita: 'g' }
+            },
+            "Dolci e Extra": {
+                biscotti: { lupetto: 40, reparto: 60, adulto: 50, unita: 'g' },
+                cereali_colazione: { lupetto: 30, reparto: 50, adulto: 50, unita: 'g' },
+                fette_biscottate: { lupetto: 3, reparto: 4, adulto: 4, unita: 'pz' },
+                marmellata: { lupetto: 20, reparto: 30, adulto: 30, unita: 'g' },
+                miele: { lupetto: 15, reparto: 20, adulto: 20, unita: 'g' },
+                cioccolato: { lupetto: 20, reparto: 30, adulto: 30, unita: 'g' },
+                cacao: { lupetto: 5, reparto: 7, adulto: 10, unita: 'g' }
+            },
+            "Condimenti": {
+                olio: { lupetto: 10, reparto: 15, adulto: 20, unita: 'ml' },
+                sale: { lupetto: 3, reparto: 5, adulto: 5, unita: 'g' },
+                burro: { lupetto: 10, reparto: 15, adulto: 20, unita: 'g' }
+            }
+        };
+
+
+        // --- Crea una versione "piatta" dell'oggetto per facilitare il calcolo ---
+        const porzioni = {};
+        for (const categoria in porzioniCategorizzate) {
+            Object.assign(porzioni, porzioniCategorizzate[categoria]);
+        }
+
+
+        // --- INIZIALIZZAZIONE ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Popolamento dropdown alimenti con categorie ---
+            const selectAlimento = document.getElementById('alimento');
+            selectAlimento.innerHTML = ''; // Pulisce opzioni esistenti
+
+            for (const categoria in porzioniCategorizzate) {
+                const optgroup = document.createElement('optgroup');
+                optgroup.label = categoria;
+
+                const alimenti = porzioniCategorizzate[categoria];
+                // Ordina gli alimenti alfabeticamente prima di aggiungerli
+                const chiaviOrdinate = Object.keys(alimenti).sort((a, b) => a.localeCompare(b));
+
+                chiaviOrdinate.forEach(key => {
+                    const option = document.createElement('option');
+                    option.value = key;
+                    option.textContent = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                    optgroup.appendChild(option);
+                });
+
+                selectAlimento.appendChild(optgroup);
+            }
+
+            // --- Impostazione visualizzazione iniziale ---
+            mostraSezione('calcolatore');
+
+            // --- Gestione Modal Disclaimer ---
+            const disclaimerModal = document.getElementById('disclaimerModal');
+            const closeModalBtn = document.getElementById('closeModalBtn');
+
+            const closeModal = () => {
+                disclaimerModal.classList.add('hidden');
+            };
+
+            closeModalBtn.addEventListener('click', closeModal);
+            disclaimerModal.addEventListener('click', (event) => {
+                if (event.target === disclaimerModal) {
+                    closeModal();
+                }
+            });
+        });
+
+        // --- LOGICA DI VISUALIZZAZIONE ---
+        function mostraSezione(sezione) {
+            const calcolatoreSection = document.getElementById('calcolatoreSection');
+            const fabbisognoSection = document.getElementById('fabbisognoSection');
+            const btnCalcolatore = document.getElementById('btnModeCalcolatore');
+            const btnFabbisogno = document.getElementById('btnModeFabbisogno');
+
+            if (sezione === 'calcolatore') {
+                calcolatoreSection.classList.remove('hidden');
+                fabbisognoSection.classList.add('hidden');
+                btnCalcolatore.classList.add('active');
+                btnCalcolatore.classList.remove('btn-secondary');
+                btnFabbisogno.classList.remove('active');
+                btnFabbisogno.classList.add('btn-secondary');
+            } else {
+                calcolatoreSection.classList.add('hidden');
+                fabbisognoSection.classList.remove('hidden');
+                btnCalcolatore.classList.remove('active');
+                btnCalcolatore.classList.add('btn-secondary');
+                btnFabbisogno.classList.add('active');
+                btnFabbisogno.classList.remove('btn-secondary');
+            }
+        }
+
+        // --- LOGICA DI SELEZIONE CATEGORIA ---
+        function selezionaCategoria(categoria) {
+            const btnLupetti = document.getElementById('btnLupetti');
+            const btnReparto = document.getElementById('btnReparto');
+            const inputSection = document.getElementById('inputSection');
+            const labelRagazzi = document.getElementById('labelRagazzi');
+            const categoriaSelezionataInput = document.getElementById('categoriaSelezionata');
+
+            if (categoria === 'lupetto') {
+                btnLupetti.classList.add('active');
+                btnReparto.classList.remove('active');
+                labelRagazzi.textContent = 'Numero Lupetti/e';
+            } else {
+                btnReparto.classList.add('active');
+                btnLupetti.classList.remove('active');
+                labelRagazzi.textContent = 'Numero Esploratori/Guide';
+            }
+
+            categoriaSelezionataInput.value = categoria;
+            inputSection.classList.remove('hidden');
+        }
+
+        // --- FUNZIONE DI CALCOLO ---
+        function calcolaQuantita() {
+            document.getElementById('risultato').classList.add('hidden');
+            const errorDiv = document.getElementById('messaggioErrore');
+            errorDiv.classList.add('hidden');
+            errorDiv.textContent = '';
+
+            const categoria = document.getElementById('categoriaSelezionata').value;
+            const numRagazzi = parseInt(document.getElementById('numRagazzi').value) || 0;
+            const numAdulti = parseInt(document.getElementById('numAdulti').value) || 0;
+            const alimentoScelto = document.getElementById('alimento').value;
+            const numPasti = parseInt(document.getElementById('numPasti').value) || 0;
+
+            if (!categoria) {
+                mostraErrore("Per favore, seleziona prima una fascia d'età.");
+                return;
+            }
+            if (numRagazzi <= 0 && numAdulti <= 0) {
+                mostraErrore("Per favore, inserisci un numero valido di ragazzi o adulti.");
+                return;
+            }
+            if (numPasti <= 0) {
+                mostraErrore("Il numero di pasti deve essere almeno 1.");
+                return;
+            }
+
+            // La ricerca della porzione avviene nell'oggetto 'piatto' (porzioni)
+            const porzioneRagazzo = porzioni[alimentoScelto][categoria];
+            const porzioneAdulto = porzioni[alimentoScelto]['adulto'];
+            const tipoUnita = porzioni[alimentoScelto]['unita'];
+
+            const totaleRagazzi = numRagazzi * porzioneRagazzo * numPasti;
+            const totaleAdulti = numAdulti * porzioneAdulto * numPasti;
+            const totaleComplessivo = totaleRagazzi + totaleAdulti;
+
+            mostraRisultato(totaleComplessivo, tipoUnita, { numRagazzi, numAdulti, numPasti, alimentoScelto, categoria });
+        }
+
+        function mostraRisultato(totale, unita, dettagli) {
+            const risultatoDiv = document.getElementById('risultato');
+            const outputDiv = document.getElementById('output');
+            const outputUnitaDiv = document.getElementById('outputUnita');
+            const dettaglioDiv = document.getElementById('dettaglioCalcolo');
+
+            const nomeCategoria = dettagli.categoria === 'lupetto' ? 'Lupetti/e' : 'Esploratori/Guide';
+            dettaglioDiv.innerHTML = `Calcolo basato su <strong>${dettagli.numRagazzi} ${nomeCategoria}</strong>, <strong>${dettagli.numAdulti} Adulti</strong> per <strong>${dettagli.numPasti} pasti</strong>.`;
+
+            outputUnitaDiv.textContent = '';
+
+            if (unita === 'g' || unita === 'ml') {
+                if (totale >= 1000) {
+                    outputDiv.textContent = `${(totale / 1000).toFixed(2)} ${unita === 'g' ? 'kg' : 'L'}`;
+                    outputUnitaDiv.textContent = `(equivalenti a ${totale} ${unita === 'g' ? 'grammi' : 'millilitri'})`;
+                } else {
+                    outputDiv.textContent = `${totale} ${unita === 'g' ? 'grammi' : 'millilitri'}`;
+                }
+            } else if (unita === 'pz') {
+                outputDiv.textContent = `${Math.ceil(totale)} pezzi`;
+                if (dettagli.alimentoScelto === 'uova') {
+                    const confezioni = Math.ceil(totale / 6);
+                    outputUnitaDiv.textContent = `Circa ${confezioni} confezioni da 6 uova.`;
+                }
+                if (dettagli.alimentoScelto === 'yogurt') {
+                    const confezioni = Math.ceil(totale / 8);
+                    outputUnitaDiv.textContent = `Circa ${confezioni} confezioni da 8 yogurt.`;
+                }
+            }
+
+            risultatoDiv.classList.remove('hidden');
+        }
+
+        function mostraErrore(messaggio) {
+            const errorDiv = document.getElementById('messaggioErrore');
+            errorDiv.textContent = messaggio;
+            errorDiv.classList.remove('hidden');
+        }
+
+    </script>
+</body>
+
+</html>
