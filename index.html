@@ -8,15 +8,27 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* --- NUOVA PALETTE E STILE --- */
+        :root {
+            --dark-green: #283618;
+            --olive-green: #606c38;
+            --cream: #f9f8f2; /* Colore crema desaturato e più chiaro */
+            --ochre: #dda15e;
+            --burnt-orange: #bc6c25;
+            --white: #ffffff;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
+            background-color: var(--cream);
+            color: var(--dark-green);
         }
         .card {
-            background-color: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-            padding: 1.5rem; /* Ridotto per mobile */
+            background-color: var(--white);
+            border-radius: 0;
+            padding: 1.5rem;
             transition: all 0.3s ease;
+            border: 2px solid var(--dark-green);
         }
         @media (min-width: 640px) {
             .card {
@@ -25,66 +37,93 @@
         }
         .btn {
             padding: 0.75rem 1.5rem;
-            border-radius: 8px;
+            border-radius: 0;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
             display: inline-flex;
             align-items: center;
             justify-content: center;
+            border: 2px solid var(--dark-green);
+            box-shadow: 4px 4px 0px var(--dark-green);
+        }
+        .btn:hover {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px var(--dark-green);
         }
         .btn-primary {
-            background-color: #3b82f6;
-            color: white;
-        }
-        .btn-primary:hover {
-            background-color: #2563eb;
+            background-color: var(--olive-green);
+            color: var(--cream);
         }
         .btn-secondary {
-            background-color: #e5e7eb;
-            color: #1f2937;
+            background-color: transparent;
+            color: var(--dark-green);
         }
-        .btn-secondary:hover {
-            background-color: #d1d5db;
+        .btn-danger {
+            background-color: #ef4444;
+            color: var(--white);
         }
         .btn-toggle.active {
-            background-color: #3b82f6;
-            color: white;
-            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.4);
+            background-color: var(--dark-green);
+            color: var(--cream);
+        }
+        .input-field {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 0;
+            border: 2px solid var(--dark-green);
+            background-color: var(--cream); /* Modificato per differenziarsi dal bianco della card */
+            transition: border-color 0.2s ease;
+        }
+        .input-field:focus {
+            outline: none;
+            border-color: var(--burnt-orange);
         }
         #risultato, #listaSpesaContainer {
-             background-color: #f0fdf4;
-             border-left: 4px solid #22c55e;
+             background-color: var(--white);
+             border: 2px solid var(--dark-green);
              padding: 1.5rem;
         }
         select optgroup {
             font-weight: bold;
-            color: #1f2937;
-            background-color: #f9fafb;
+            color: var(--dark-green);
+            background-color: var(--cream);
         }
-        .meal-slot { border-left: 3px solid #e5e7eb; }
-        .meal-slot.merenda { border-left-color: #f59e0b; }
+        .meal-slot { border-left: 2px solid var(--dark-green); }
         
         /* Stili per il calendario */
         .day-cell {
-            border: 1px solid #e5e7eb;
-            min-height: 5rem; /* Altezza ridotta per mobile */
+            border: 2px solid var(--dark-green);
+            min-height: 5rem;
             transition: all 0.2s ease;
             position: relative;
             padding: 0.25rem;
+            background-color: var(--white);
         }
-        @media (min-width: 640px) {
-            .day-cell {
-                 min-height: 6rem;
-            }
-        }
+        @media (min-width: 640px) { .day-cell { min-height: 6rem; } }
         .day-cell.clickable { cursor: pointer; }
-        .day-cell.clickable:hover { background-color: #eff6ff; }
-        .day-cell.selected { outline: 3px solid #3b82f6; outline-offset: -1px; background-color: #dbeafe; }
-        .day-cell.disabled { background-color: #f3f4f6; color: #9ca3af; }
-        .day-cell.complete { background-color: #dcfce7; color: #15803d; font-weight: bold; border-color: #86efac; }
-        .day-cell.complete:hover { background-color: #bbf7d0; }
-        .day-cell.selected.complete { background-color: #a7f3d0; outline-color: #16a34a; }
+        .day-cell.clickable:hover { background-color: var(--cream); }
+        .day-cell.selected {
+            background-color: var(--ochre);
+            color: var(--dark-green);
+            border-width: 3px;
+        }
+        .day-cell.disabled {
+            background-color: #f3f4f6;
+            color: #9ca3af;
+            border-style: dashed;
+        }
+        .day-cell.complete {
+            background-color: var(--olive-green);
+            color: var(--cream);
+        }
+        .day-cell.complete .meal-icons-container i {
+            color: var(--cream);
+        }
+        .day-cell.selected.complete {
+             background-color: var(--burnt-orange);
+             color: var(--cream);
+        }
         .meal-icons-container {
             position: absolute;
             bottom: 4px;
@@ -92,36 +131,32 @@
             display: flex;
             flex-wrap: wrap;
             gap: 4px;
-            font-size: 0.6rem; /* Ridotto per mobile */
+            font-size: 0.6rem;
         }
-        @media (min-width: 640px) {
-             .meal-icons-container {
-                font-size: 0.75rem;
-             }
-        }
+        @media (min-width: 640px) { .meal-icons-container { font-size: 0.75rem; } }
     </style>
 </head>
-<body class="bg-gray-50 flex items-center justify-center min-h-screen py-8">
+<body class="bg-cream">
     <div class="w-full max-w-7xl mx-auto p-4">
         
         <!-- Welcome Section -->
         <section id="welcomeSection" class="card text-center max-w-3xl mx-auto">
-             <h1 class="text-3xl sm:text-4xl font-bold text-gray-800">Benvenuto nel Calcolatore Cambusa Scout!</h1>
-             <p class="text-gray-600 mt-4 max-w-2xl mx-auto">
+             <h1 class="text-3xl sm:text-4xl font-bold">Benvenuto nel Calcolatore Cambusa Scout!</h1>
+             <p class="mt-4 max-w-2xl mx-auto">
                 Questo strumento ti aiuta a pianificare la cambusa per i tuoi campi estivi. Puoi fare un calcolo rapido per un singolo alimento, creare un menu giornaliero completo e generare automaticamente la lista della spesa.
              </p>
-             <div class="mt-6 p-4 bg-amber-50 border-l-4 border-amber-400 text-amber-800 text-left rounded-r-lg">
+             <div class="mt-6 p-4 bg-white border-2 border-dashed border-burnt-orange text-left">
                 <div class="flex">
-                    <div class="py-1"><i class="fas fa-exclamation-triangle mr-3 text-amber-500"></i></div>
+                    <div class="py-1"><i class="fas fa-exclamation-triangle mr-3 text-burnt-orange"></i></div>
                     <div>
-                        <p class="font-bold">Attenzione</p>
+                        <p class="font-bold text-burnt-orange">Attenzione</p>
                         <p class="text-sm">
                             Questo strumento è pensato per essere un aiuto e una guida generale. Le quantità calcolate sono delle stime basate su valori medi e non sostituiscono la valutazione di un cambusiere esperto. Usalo come un ottimo punto di partenza!
                         </p>
                     </div>
                 </div>
             </div>
-             <p class="text-gray-700 font-semibold mt-8 mb-4 text-xl">Per iniziare, scegli la tua branca:</p>
+             <p class="font-semibold mt-8 mb-4 text-xl">Per iniziare, scegli la tua branca:</p>
              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
                 <button class="btn btn-primary text-xl sm:text-2xl py-6 sm:py-8" onclick="iniziaApplicazione('lupetto')">
                     <i class="fas fa-paw mr-4"></i> Lupetti / Coccinelle
@@ -134,443 +169,157 @@
 
         <!-- Main Application -->
         <div id="mainApp" class="hidden">
-            <header class="text-center mb-6">
-                <h1 class="text-3xl sm:text-4xl font-bold text-gray-800">Calcolatore Cambusa Scout</h1>
-                <p id="modalitaAttiva" class="text-gray-600 mt-2 text-lg sm:text-xl font-semibold"></p>
+            <header class="text-center mb-6 relative">
+                <h1 class="text-3xl sm:text-4xl font-bold">Calcolatore Cambusa Scout</h1>
+                <p id="modalitaAttiva" class="mt-2 text-lg sm:text-xl font-semibold"></p>
+                <button onclick="confermaReset()" class="absolute top-0 right-0 btn btn-secondary text-xs p-2" title="Resetta tutti i dati"><i class="fas fa-sync-alt"></i></button>
             </header>
 
             <div class="flex justify-center flex-wrap gap-4 mb-6">
-                <button id="btnModeMenu" class="btn btn-toggle" onclick="mostraSezione('menu')"><i class="fas fa-calendar-alt mr-2"></i> Il Tuo Menu</button>
-                <button id="btnModeCalcolatore" class="btn btn-toggle btn-secondary" onclick="mostraSezione('calcolatore')"><i class="fas fa-calculator mr-2"></i> Calcolatore Veloce</button>
+                <button id="btnModeCalcolatore" class="btn btn-toggle" onclick="mostraSezione('calcolatore')"><i class="fas fa-calculator mr-2"></i> Calcolatore Veloce</button>
+                <button id="btnModeMenu" class="btn btn-toggle btn-secondary" onclick="mostraSezione('menu')"><i class="fas fa-calendar-alt mr-2"></i> Il Tuo Menu</button>
                 <button id="btnModeFabbisogno" class="btn btn-toggle btn-secondary" onclick="mostraSezione('fabbisogno')"><i class="fas fa-book-open mr-2"></i> Fabbisogno Energetico</button>
             </div>
 
-            <main id="calcolatoreSection" class="card hidden"></main>
-            <section id="menuSection" class="card"></section>
+            <main id="calcolatoreSection" class="card"></main>
+            <section id="menuSection" class="card hidden"></section>
             <section id="fabbisognoSection" class="card hidden"></section>
+        </div>
+        
+        <!-- Modal di Conferma Reset -->
+        <div id="resetModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center p-4 z-50">
+            <div class="card max-w-md w-full">
+                <div class="text-center">
+                    <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-none bg-red-100 mb-4 border-2 border-dark-green"><i class="fas fa-exclamation-triangle text-2xl text-red-600"></i></div>
+                    <h3 class="text-xl sm:text-2xl font-bold">Sei sicuro?</h3>
+                    <p class="mt-4">Stai per cancellare tutti i dati salvati, inclusi il menu e le impostazioni del campo. Questa azione è irreversibile.</p>
+                </div>
+                <div class="mt-8 flex justify-center gap-4">
+                    <button onclick="annullaReset()" class="btn btn-secondary">Annulla</button>
+                    <button onclick="eseguiReset()" class="btn btn-danger">Sì, cancella tutto</button>
+                </div>
+            </div>
         </div>
 
     </div>
 
     <script>
-        const porzioniCategorizzate = {
-            "Carboidrati e Primi Piatti":{pane:{lupetto:60,reparto:90,adulto:110,unita:"g"},pasta:{lupetto:90,reparto:120,adulto:130,unita:"g"},patate:{lupetto:150,reparto:200,adulto:250,unita:"g"},riso:{lupetto:80,reparto:100,adulto:110,unita:"g"},polenta:{lupetto:60,reparto:80,adulto:100,unita:"g"},couscous:{lupetto:60,reparto:90,adulto:100,unita:"g"},crackers:{lupetto:25,reparto:35,adulto:40,unita:"g"}},
-            "Carne, Pesce e Uova":{carne_rossa:{lupetto:100,reparto:150,adulto:180,unita:"g"},pesce:{lupetto:150,reparto:200,adulto:220,unita:"g"},pollo:{lupetto:120,reparto:180,adulto:200,unita:"g"},uova:{lupetto:1,reparto:2,adulto:2,unita:"pz"},wurstel:{lupetto:1,reparto:2,adulto:2,unita:"pz"},tonno:{lupetto:50,reparto:80,adulto:100,unita:"g"}},
-            "Verdura e Legumi":{fagioli:{lupetto:50,reparto:70,adulto:80,unita:"g"},piselli:{lupetto:80,reparto:100,adulto:120,unita:"g"},pomodori:{lupetto:120,reparto:150,adulto:180,unita:"g"},insalata:{lupetto:70,reparto:90,adulto:100,unita:"g"},carote:{lupetto:100,reparto:130,adulto:150,unita:"g"},cipolle:{lupetto:30,reparto:40,adulto:50,unita:"g"},zucchine:{lupetto:120,reparto:160,adulto:180,unita:"g"},melanzane:{lupetto:120,reparto:160,adulto:180,unita:"g"},peperoni:{lupetto:100,reparto:140,adulto:160,unita:"g"},legumi_secchi:{lupetto:40,reparto:60,adulto:70,unita:"g"},passata_pomodoro:{lupetto:60,reparto:80,adulto:100,unita:"g"}},
-            "Frutta":{mela:{lupetto:1,reparto:1,adulto:1,unita:"pz"},banana:{lupetto:1,reparto:1,adulto:1,unita:"pz"},pesca:{lupetto:1,reparto:1,adulto:1,unita:"pz"},anguria:{lupetto:300,reparto:400,adulto:500,unita:"g"},albicocca:{lupetto:2,reparto:3,adulto:3,unita:"pz"},pera:{lupetto:1,reparto:1,adulto:1,unita:"pz"},frutta_mista:{lupetto:150,reparto:200,adulto:250,unita:"g"}},
-            "Latticini e Formaggi":{latte:{lupetto:250,reparto:300,adulto:300,unita:"ml"},yogurt:{lupetto:1,reparto:1,adulto:1,unita:"pz"},formaggio_fresco:{lupetto:70,reparto:100,adulto:120,unita:"g"},formaggio_stagionato:{lupetto:40,reparto:50,adulto:60,unita:"g"},mozzarella:{lupetto:80,reparto:100,adulto:120,unita:"g"}},
-            "Dolci e Extra":{biscotti:{lupetto:40,reparto:60,adulto:50,unita:"g"},cereali_colazione:{lupetto:30,reparto:50,adulto:50,unita:"g"},fette_biscottate:{lupetto:3,reparto:4,adulto:4,unita:"pz"},marmellata:{lupetto:20,reparto:30,adulto:30,unita:"g"},miele:{lupetto:15,reparto:20,adulto:20,unita:"g"},cioccolato:{lupetto:20,reparto:30,adulto:30,unita:"g"},cacao:{lupetto:5,reparto:7,adulto:10,unita:"g"}},
-            "Condimenti":{olio:{lupetto:10,reparto:15,adulto:20,unita:"ml"},sale:{lupetto:3,reparto:5,adulto:5,unita:"g"},burro:{lupetto:10,reparto:15,adulto:20,unita:"g"}}
-        };
-        const porzioni = {};
-        for (const cat in porzioniCategorizzate) Object.assign(porzioni, porzioniCategorizzate[cat]);
-        
+        // --- GLOBAL STATE ---
+        let porzioniCategorizzate = {};
+        let porzioni = {};
         let brancaSelezionata = null;
         let menuData = {};
         let giornoSelezionato = null;
         const CONDIMENT_MULTIPLIER = 0.35;
+        const STORAGE_KEY = 'cambusaScoutData';
 
-        function popolaSelectAlimenti(selectElement) {
-            if (!selectElement) return;
-            selectElement.innerHTML = '';
-            for (const categoria in porzioniCategorizzate) {
-                const optgroup = document.createElement('optgroup');
-                optgroup.label = categoria;
-                const chiaviOrdinate = Object.keys(porzioniCategorizzate[categoria]).sort();
-                chiaviOrdinate.forEach(key => {
-                    const option = document.createElement('option');
-                    option.value = key;
-                    option.textContent = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-                    optgroup.appendChild(option);
+        // --- DATA LOADING AND PARSING ---
+        async function caricaDatiAlimenti() {
+            try {
+                const response = await fetch('alimenti.csv');
+                if (!response.ok) throw new Error(`Impossibile caricare alimenti.csv: ${response.statusText}`);
+                const csvText = await response.text();
+                const datiCaricati = {};
+                const porzioniPiatte = {};
+                const righe = csvText.split('\n').slice(1);
+                righe.forEach(riga => {
+                    if (riga.trim() === '') return;
+                    const colonne = riga.split(',');
+                    const [id, nome, categoria, lupetto, reparto, adulto, unita] = colonne;
+                    const porzione = {lupetto: parseInt(lupetto), reparto: parseInt(reparto), adulto: parseInt(adulto), unita: unita.trim()};
+                    if (!datiCaricati[categoria]) datiCaricati[categoria] = {};
+                    datiCaricati[categoria][id] = porzione;
+                    porzioniPiatte[id] = porzione;
                 });
-                selectElement.appendChild(optgroup);
+                porzioniCategorizzate = datiCaricati;
+                porzioni = porzioniPiatte;
+                return true;
+            } catch (error) {
+                console.error("Errore nel caricamento dei dati:", error);
+                alert("Errore critico: impossibile caricare il database degli alimenti. Assicurati che il file 'alimenti.csv' esista.");
+                return false;
             }
         }
 
-        function mostraErrore(messaggio, contesto = 'calcolatore') {
-            const errorDiv = document.getElementById(contesto === 'menu' ? 'menuMessaggioErrore' : 'messaggioErrore');
-            errorDiv.textContent = messaggio;
-            errorDiv.classList.toggle('hidden', !messaggio);
+        // --- LOCAL STORAGE MANAGEMENT ---
+        function salvaStato() {
+            const stato = {
+                brancaSelezionata,
+                menuNumRagazzi: document.getElementById('menuNumRagazzi')?.value,
+                menuNumAdulti: document.getElementById('menuNumAdulti')?.value,
+                startDate: document.getElementById('startDate')?.value,
+                endDate: document.getElementById('endDate')?.value,
+                menuData
+            };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(stato));
         }
 
+        async function caricaStato() {
+            const statoSalvato = localStorage.getItem(STORAGE_KEY);
+            if (statoSalvato) {
+                const stato = JSON.parse(statoSalvato);
+                await iniziaApplicazione(stato.brancaSelezionata, false); // false per non salvare di nuovo
+                
+                document.getElementById('menuNumRagazzi').value = stato.menuNumRagazzi || '';
+                document.getElementById('menuNumAdulti').value = stato.menuNumAdulti || '';
+                document.getElementById('startDate').value = stato.startDate || '';
+                document.getElementById('endDate').value = stato.endDate || '';
+
+                if (stato.startDate && stato.endDate) {
+                    menuData = stato.menuData || {};
+                    generaCalendario(false); 
+                    Object.keys(menuData).forEach(dateString => {
+                        aggiornaStatoGiorno(dateString);
+                    });
+                    aggiornaListaSpesa();
+                }
+            }
+        }
+        
+        function confermaReset() { document.getElementById('resetModal').classList.remove('hidden'); }
+        function annullaReset() { document.getElementById('resetModal').classList.add('hidden'); }
+        function eseguiReset(){ localStorage.removeItem(STORAGE_KEY); location.reload(); }
+
+        // --- INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('mainApp').addEventListener('click', gestisciClick);
+            caricaStato();
         });
         
-        function gestisciClick(event){
-            const target = event.target.closest('button');
-            if(!target) return;
-            const id = target.id;
-
-            if (id.startsWith('btnMode')) {
-                const section = id.replace('btnMode', '').toLowerCase();
-                mostraSezione(section);
-            }
-        }
-        
-        function iniziaApplicazione(branca) {
+        async function iniziaApplicazione(branca, deveSalvare = true) {
             brancaSelezionata = branca;
+            const datiCaricati = Object.keys(porzioni).length > 0 || await caricaDatiAlimenti();
+            if (!datiCaricati) return;
             document.getElementById('welcomeSection').classList.add('hidden');
             document.getElementById('mainApp').classList.remove('hidden');
-
             const nomeBranca = branca === 'lupetto' ? 'Lupetti / Coccinelle' : 'Esploratori / Guide';
-            document.getElementById('modalitaAttiva').innerHTML = `Modalità Attiva: <span class="text-green-700">${nomeBranca}</span>`;
-            
+            document.getElementById('modalitaAttiva').innerHTML = `Modalità Attiva: <span style="color: var(--olive-green)">${nomeBranca}</span>`;
             popolaSezioni();
-            mostraSezione('menu');
-        }
-
-        function popolaSezioni(){
-             popolaSezioneCalcolatore();
-             popolaSezioneMenu();
-             popolaSezioneFabbisogno();
-        }
-
-        function mostraSezione(sezione) {
-            ['calcolatoreSection', 'fabbisognoSection', 'menuSection'].forEach(id => document.getElementById(id).classList.add('hidden'));
-            ['btnModeCalcolatore', 'btnModeFabbisogno', 'btnModeMenu'].forEach(id => {
-                const btn = document.getElementById(id);
-                btn.classList.remove('active', 'btn-secondary');
-                btn.classList.add(id.toLowerCase().includes(sezione) ? 'active' : 'btn-secondary');
-            });
-            document.getElementById(sezione + 'Section').classList.remove('hidden');
+            mostraSezione('calcolatore');
+            if (deveSalvare) salvaStato();
         }
         
-        function popolaSezioneCalcolatore(){
-             const container = document.getElementById('calcolatoreSection');
-             const nomePartecipanti = brancaSelezionata === 'lupetto' ? 'N. Lupetti/e' : 'N. Esplo/Guide';
-             container.innerHTML = `<h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Calcolatore Rapido per Singolo Alimento</h2><div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6"><div><label for="numRagazziCalc" class="block text-sm font-medium text-gray-700 mb-1">${nomePartecipanti}</label><input type="number" id="numRagazziCalc" class="input-field" placeholder="Es. 20" min="0"></div><div><label for="numAdultiCalc" class="block text-sm font-medium text-gray-700 mb-1">Numero Adulti</label><input type="number" id="numAdultiCalc" class="input-field" placeholder="Es. 5" min="0"></div><div><label for="alimento" class="block text-sm font-medium text-gray-700 mb-1">Tipo di Alimento</label><select id="alimento" class="input-field"></select></div><div><label for="numPasti" class="block text-sm font-medium text-gray-700 mb-1">Numero di Pasti</label><input type="number" id="numPasti" class="input-field" placeholder="Es. 3" min="1"></div></div><button class="btn btn-primary w-full text-lg" onclick="calcolaQuantita()"><i class="fas fa-calculator mr-2"></i> Calcola Quantità</button><div id="risultato" class="mt-8 p-6 rounded-lg hidden"></div><div id="messaggioErrore" class="hidden mt-4 p-4 text-red-800 bg-red-100 border-l-4 border-red-500 rounded-lg"></div>`;
-             popolaSelectAlimenti(document.getElementById('alimento'));
-        }
-
-        function popolaSezioneMenu() {
-            const container = document.getElementById('menuSection');
-            const nomePartecipanti = brancaSelezionata === 'lupetto' ? 'N. Lupetti/e' : 'N. Esplo/Guide';
-            container.innerHTML = `<h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Crea il Tuo Menu e la Lista della Spesa</h2><div class="mb-6 p-4 bg-gray-100 rounded-lg text-sm text-gray-700"><h4 class="font-bold mb-2">Come creare il tuo menu:</h4><ol class="list-decimal list-inside space-y-1"><li><strong>Imposta il campo:</strong> Inserisci il numero di partecipanti e le date di inizio/fine.</li><li><strong>Genera il calendario:</strong> Clicca sul pulsante per visualizzare i giorni del campo.</li><li><strong>Seleziona un giorno:</strong> Clicca su una data nel calendario per aprire l'editor dei pasti qui sotto.</li><li><strong>Componi i pasti:</strong> Aggiungi gli alimenti per colazione, pranzo, merenda e cena.</li><li><strong>La lista della spesa</strong> e i pulsanti per esportare appariranno automaticamente in fondo alla pagina.</li></ol></div><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-end bg-gray-50 p-4 rounded-lg mb-8"><div><label for="menuNumRagazzi" class="block text-sm font-medium text-gray-700 mb-1">${nomePartecipanti}</label><input type="number" id="menuNumRagazzi" class="input-field" placeholder="0" min="0"></div><div><label for="menuNumAdulti" class="block text-sm font-medium text-gray-700 mb-1">N. Adulti</label><input type="number" id="menuNumAdulti" class="input-field" placeholder="0" min="0"></div><div><label for="startDate" class="block text-sm font-medium text-gray-700 mb-1">Data Inizio</label><input type="date" id="startDate" class="input-field"></div><div><label for="endDate" class="block text-sm font-medium text-gray-700 mb-1">Data Fine</label><input type="date" id="endDate" class="input-field"></div><div class="lg:col-span-4 flex justify-center items-end mt-4"><button class="btn btn-primary w-full sm:w-auto" onclick="generaCalendario()"><i class="fas fa-cogs mr-2"></i>Genera Calendario</button></div></div><div id="calendarioGridContainer" class="mb-8"></div><div id="editorPastiContainer" class="hidden mt-8"></div><div id="listaSpesaContainer" class="rounded-lg hidden"></div><div id="menuMessaggioErrore" class="hidden mt-4 p-4 text-red-800 bg-red-100 border-l-4 border-red-500 rounded-lg"></div><div id="exportContainer" class="mt-8 flex flex-col sm:flex-row justify-center gap-4 hidden"><button class="btn btn-secondary" onclick="exportMenuCSV()"><i class="fas fa-file-csv mr-2"></i> Esporta Menu (CSV)</button><button class="btn btn-secondary" onclick="exportSpesaCSV()"><i class="fas fa-shopping-cart mr-2"></i> Esporta Lista Spesa (CSV)</button></div>`;
-            container.querySelector('#calendarioGridContainer').addEventListener('click', gestisciClickGiorno);
-            container.querySelector('#editorPastiContainer').addEventListener('click', gestisciClickEditor);
-        }
-
-        function popolaSezioneFabbisogno() {
-            const container = document.getElementById('fabbisognoSection');
-            const datiFabbisogno = brancaSelezionata === 'lupetto' 
-                ? { kcal: '~ 2100 Kcal', proteine: '~ 70 g', grassi: '~ 65 g', carboidrati: '~ 275 g' }
-                : { kcal: '~ 2500 Kcal', proteine: '~ 85 g', grassi: '~ 75 g', carboidrati: '~ 330 g' };
-            container.innerHTML = `<h2 class="text-2xl font-bold text-gray-800 mb-4 text-center">Fabbisogno Energetico di Riferimento</h2><p class="text-gray-600 mb-6 text-center">Valori medi giornalieri per la branca <strong>${brancaSelezionata === 'lupetto' ? 'Lupetti/Coccinelle' : 'Esploratori/Guide'}</strong>.</p><div class="overflow-x-auto"><table class="w-full text-left table-auto"><thead class="bg-gray-100"><tr><th class="text-base font-semibold text-gray-700">Nutriente</th><th class="text-base font-semibold text-gray-700 text-center">Quantità Giornaliera</th></tr></thead><tbody><tr><td class="font-medium text-gray-800">Fabbisogno Calorico</td><td class="text-center font-semibold text-lg text-blue-600">${datiFabbisogno.kcal}</td></tr><tr class="bg-gray-50"><td class="font-medium text-gray-800">Proteine</td><td class="text-center"><div class="text-lg font-semibold text-gray-800">${datiFabbisogno.proteine}</div></td></tr><tr><td class="font-medium text-gray-800">Grassi</td><td class="text-center"><div class="text-lg font-semibold text-gray-800">${datiFabbisogno.grassi}</div></td></tr><tr class="bg-gray-50"><td class="font-medium text-gray-800">Carboidrati</td><td class="text-center"><div class="text-lg font-semibold text-gray-800">${datiFabbisogno.carboidrati}</div></td></tr></tbody></table></div><footer class="text-center mt-6"><p class="text-xs text-gray-500">Fonte: Elaborazione su dati LARN (SINU, 2014).</p></footer>`;
-        }
-
-        function calcolaQuantita() {
-            const risultatoDiv = document.getElementById('risultato');
-            risultatoDiv.innerHTML = '';
-            risultatoDiv.classList.add('hidden');
-            
-            const numRagazzi = parseInt(document.getElementById('numRagazziCalc').value) || 0;
-            const numAdulti = parseInt(document.getElementById('numAdultiCalc').value) || 0;
-            const alimentoScelto = document.getElementById('alimento').value;
-            const numPasti = parseInt(document.getElementById('numPasti').value) || 0;
-            
-            if ((numRagazzi <= 0 && numAdulti <= 0) || numPasti <= 0) {
-                 mostraErrore("Compila tutti i campi numerici con valori maggiori di zero.", 'calcolatore');
-                 return;
-            }
-            mostraErrore("", 'calcolatore');
-
-            const porzioneRagazzo = porzioni[alimentoScelto][brancaSelezionata];
-            const porzioneAdulto = porzioni[alimentoScelto]['adulto'];
-            const tipoUnita = porzioni[alimentoScelto]['unita'];
-            const totaleComplessivo = (numRagazzi * porzioneRagazzo * numPasti) + (numAdulti * porzioneAdulto * numPasti);
-            const nomeBranca = brancaSelezionata === 'lupetto' ? 'Lupetti/e' : 'Esplo/Guide';
-            
-            let outputPrincipale = '';
-            if (tipoUnita === 'g' || tipoUnita === 'ml') {
-                outputPrincipale = totaleComplessivo >= 1000 
-                    ? `${(totaleComplessivo / 1000).toFixed(2)} ${tipoUnita === 'g' ? 'kg' : 'L'}`
-                    : `${Math.round(totaleComplessivo)} ${tipoUnita === 'g' ? 'grammi' : 'millilitri'}`;
-            } else if (tipoUnita === 'pz') {
-                 outputPrincipale = `${Math.ceil(totaleComplessivo)} pezzi`;
-            }
-
-            const dettaglioPorzioni = `(${porzioneRagazzo}${tipoUnita} a testa per ${nomeBranca} e ${porzioneAdulto}${tipoUnita} a testa per Adulti)`;
-            
-            risultatoDiv.innerHTML = `<h3 class="text-2xl font-bold text-gray-800 mb-4">Quantità Totale Necessaria</h3><div class="text-sm text-gray-600 mb-4">Calcolo basato su <strong>${numRagazzi} ${nomeBranca}</strong>, <strong>${numAdulti} Adulti</strong> per <strong>${numPasti} pasti</strong>.</div><div class="text-3xl font-bold text-green-700">${outputPrincipale}</div><div class="text-base font-semibold text-green-600 mt-1">${dettaglioPorzioni}</div>`;
-            risultatoDiv.classList.remove('hidden');
-        }
-        
-        function generaCalendario() {
-            const container = document.getElementById('calendarioGridContainer');
-            const editorContainer = document.getElementById('editorPastiContainer');
-            const listaSpesaCont = document.getElementById('listaSpesaContainer');
-            container.innerHTML = '';
-            editorContainer.innerHTML = '';
-            editorContainer.classList.add('hidden');
-            listaSpesaCont.classList.add('hidden');
-            document.getElementById('exportContainer').classList.add('hidden');
-            giornoSelezionato = null;
-
-            const startDate = new Date(document.getElementById('startDate').value);
-            const endDate = new Date(document.getElementById('endDate').value);
-            const numRagazzi = parseInt(document.getElementById('menuNumRagazzi').value) || 0;
-            const numAdulti = parseInt(document.getElementById('menuNumAdulti').value) || 0;
-            
-            mostraErrore('', 'menu');
-            if (isNaN(startDate) || isNaN(endDate) || (numRagazzi <= 0 && numAdulti <= 0)) {
-                mostraErrore("Compila tutti i campi: date e numero partecipanti.", "menu"); return;
-            }
-            if (startDate > endDate) { mostraErrore("La data di inizio non può essere successiva alla data di fine.", "menu"); return; }
-
-            menuData = {};
-            let currentDate = new Date(startDate);
-            while(currentDate <= endDate) {
-                const dateString = currentDate.toISOString().split('T')[0];
-                menuData[dateString] = { colazione: [], pranzo: [], merenda: [], cena: [] };
-                currentDate.setDate(currentDate.getDate() + 1);
-            }
-            
-            const monthName = startDate.toLocaleString('it-IT', { month: 'long', year: 'numeric' });
-            container.innerHTML = `<h3 class="text-xl font-bold text-center mb-2 capitalize">${monthName}</h3>`;
-
-            const grid = document.createElement('div');
-            grid.className = 'grid grid-cols-7 text-center';
-            
-            ['Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab', 'Dom'].forEach(day => grid.innerHTML += `<div class="font-bold p-1 text-xs sm:p-2 sm:text-base">${day}</div>`);
-            
-            let firstDay = startDate.getDay();
-            firstDay = firstDay === 0 ? 6 : firstDay - 1;
-
-            for (let i = 0; i < firstDay; i++) grid.innerHTML += '<div></div>';
-
-            Object.keys(menuData).forEach(dateString => {
-                const date = new Date(dateString + 'T12:00:00');
-                const dayCell = document.createElement('div');
-                dayCell.className = 'day-cell clickable flex flex-col items-center justify-start text-center';
-                dayCell.dataset.date = dateString;
-                dayCell.innerHTML = `<span class="font-bold text-sm sm:text-base">${date.getDate()}</span><div class="meal-icons-container"></div>`;
-                grid.appendChild(dayCell);
-            });
-            container.appendChild(grid);
-        }
-
-        function gestisciClickGiorno(event) {
-            const target = event.target.closest('.clickable');
-            if (!target) return;
-            if (giornoSelezionato) giornoSelezionato.classList.remove('selected');
-            giornoSelezionato = target;
-            giornoSelezionato.classList.add('selected');
-            mostraEditorPasti(target.dataset.date);
-        }
-        
-        function mostraEditorPasti(dateString) {
-            const editorContainer = document.getElementById('editorPastiContainer');
-            const date = new Date(dateString + 'T12:00:00');
-            editorContainer.classList.remove('hidden');
-            editorContainer.innerHTML = `<div class="card bg-blue-50"><h3 class="text-xl font-bold text-center mb-4">Modifica Menu per: <span class="text-blue-700">${date.toLocaleDateString('it-IT', {weekday: 'long', day: 'numeric', month: 'long'})}</span></h3><div class="grid grid-cols-1 md:grid-cols-2 gap-4">${['colazione','pranzo','merenda','cena'].map(p => creaSlotPastoEditor(dateString, p)).join('')}</div></div>`;
-            renderPasti(dateString);
-        }
-
-        function creaSlotPastoEditor(dateString, tipoPasto) {
-            const nomiPasti = { colazione: 'Colazione', pranzo: 'Pranzo', merenda: 'Merenda', cena: 'Cena' };
-            const isMerenda = tipoPasto === 'merenda';
-            const showCondimentCheckbox = (tipoPasto === 'pranzo' || tipoPasto === 'cena');
-
-            return `<div class="meal-slot ${isMerenda ? 'merenda p-2' : 'p-4'} rounded-lg space-y-2 bg-white shadow-sm"><h4 class="font-semibold ${isMerenda ? 'text-sm' : 'text-md'} text-gray-700">${nomiPasti[tipoPasto]}</h4><ul id="lista-${tipoPasto}-${dateString}" class="text-sm space-y-1 min-h-[2rem]"></ul><div class="flex gap-2 pt-2 items-center flex-wrap"><select class="input-field text-sm flex-grow" id="select-${tipoPasto}-${dateString}"></select>${showCondimentCheckbox ? `<div class="flex items-center gap-1"><input type="checkbox" id="condiment-${tipoPasto}-${dateString}" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"><label for="condiment-${tipoPasto}-${dateString}" class="text-xs text-gray-600">Come condimento</label></div>` : ''}<button class="btn btn-primary btn-sm p-2 ml-auto" data-action="add" data-date="${dateString}" data-meal="${tipoPasto}"><i class="fas fa-plus"></i></button></div></div>`;
-        }
-
-        function gestisciClickEditor(event) {
-            const target = event.target.closest('button');
-            if (!target) return;
-            const { action, date, meal, index } = target.dataset;
-            let menuCambiato = false;
-            if (action === 'add') {
-                const select = document.getElementById(`select-${meal}-${date}`);
-                const condimentCheckbox = document.getElementById(`condiment-${meal}-${date}`);
-                const isCondiment = condimentCheckbox ? condimentCheckbox.checked : false;
-                if (select.value) { 
-                    menuData[date][meal].push({alimento: select.value, isCondiment: isCondiment}); 
-                    menuCambiato = true; 
-                }
-            } else if (action === 'remove') {
-                menuData[date][meal].splice(index, 1);
-                menuCambiato = true;
-            }
-            if(menuCambiato) {
-                renderPasti(date);
-                aggiornaListaSpesa();
-                aggiornaStatoGiorno(date);
-            }
-        }
-
-        function renderPasti(dateString) {
-            Object.keys(menuData[dateString]).forEach(pasto => {
-                const ul = document.getElementById(`lista-${pasto}-${dateString}`);
-                if (!ul) return;
-                ul.innerHTML = '';
-                menuData[dateString][pasto].forEach((item, index) => {
-                    const condimentTag = item.isCondiment ? '<span class="text-xs text-gray-500 ml-1">(cond.)</span>' : '';
-                    ul.innerHTML += `<li class="flex justify-between items-center bg-gray-100 p-1 rounded"><span>${item.alimento.replace(/_/g, ' ')} ${condimentTag}</span><button class="text-red-500 hover:text-red-700" data-action="remove" data-date="${dateString}" data-meal="${pasto}" data-index="${index}"><i class="fas fa-times-circle"></i></button></li>`;
-                });
-                const select = document.getElementById(`select-${pasto}-${dateString}`);
-                if (select && !select.childElementCount) popolaSelectAlimenti(select);
-            });
-        }
-        
-        function aggiornaStatoGiorno(dateString) {
-            if (!menuData[dateString]) return;
-            const dayData = menuData[dateString];
-            const isComplete = dayData.colazione.length > 0 && dayData.pranzo.length > 0 && dayData.cena.length > 0;
-            const dayCell = document.querySelector(`.day-cell[data-date="${dateString}"]`);
-            if (!dayCell) return;
-            
-            dayCell.classList.toggle('complete', isComplete);
-            
-            const iconsContainer = dayCell.querySelector('.meal-icons-container');
-            iconsContainer.innerHTML = '';
-            
-            const icons = {
-                colazione: {icon: 'fa-mug-saucer', color: 'text-yellow-600'},
-                pranzo: {icon: 'fa-utensils', color: 'text-red-600'},
-                merenda: {icon: 'fa-cookie-bite', color: 'text-orange-500'},
-                cena: {icon: 'fa-moon', color: 'text-indigo-600'}
-            };
-            
-            Object.keys(icons).forEach(meal => {
-                if(dayData[meal].length > 0){
-                    iconsContainer.innerHTML += `<i class="fas ${icons[meal].icon} ${icons[meal].color}"></i>`;
-                }
-            });
-        }
-        
-        function aggiornaListaSpesa() {
-            const listaContainer = document.getElementById('listaSpesaContainer');
-            const exportContainer = document.getElementById('exportContainer');
-            const numRagazzi = parseInt(document.getElementById('menuNumRagazzi').value) || 0;
-            const numAdulti = parseInt(document.getElementById('menuNumAdulti').value) || 0;
-
-            if (numRagazzi <= 0 && numAdulti <= 0) {
-                 listaContainer.classList.add('hidden');
-                 exportContainer.classList.add('hidden');
-                 return;
-            }
-
-            const spesaTotale = {};
-            for (const date in menuData) {
-                for (const pasto in menuData[date]) {
-                    menuData[date][pasto].forEach(item => {
-                        const alimento = item.alimento;
-                        if (!spesaTotale[alimento]) spesaTotale[alimento] = 0;
-                        const multiplier = item.isCondiment ? CONDIMENT_MULTIPLIER : 1;
-                        spesaTotale[alimento] += ((numRagazzi * porzioni[alimento][brancaSelezionata]) + (numAdulti * porzioni[alimento].adulto)) * multiplier;
-                    });
-                }
-            }
-            
-            if (Object.keys(spesaTotale).length === 0) {
-                 listaContainer.innerHTML = '<p class="text-center text-gray-500">La tua lista della spesa è vuota. Aggiungi alimenti al menu.</p>';
-                 listaContainer.classList.remove('hidden');
-                 exportContainer.classList.add('hidden');
-                 return;
-            }
-            listaContainer.classList.remove('hidden');
-            exportContainer.classList.remove('hidden');
-            let html = '<h3 class="text-2xl font-bold text-gray-800 mb-4">Lista della Spesa Totale</h3><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-2">';
-            const chiaviOrdinate = Object.keys(spesaTotale).sort();
-            chiaviOrdinate.forEach(alimento => {
-                const totale = spesaTotale[alimento];
-                const unita = porzioni[alimento].unita;
-                let displayValue = '';
-                if (unita === 'g' || unita === 'ml') {
-                    displayValue = totale >= 1000 ? `<strong>${(totale / 1000).toFixed(2)}</strong> ${unita === 'g' ? 'kg' : 'L'}` : `<strong>${Math.ceil(totale)}</strong> ${unita}`;
-                } else {
-                    displayValue = `<strong>${Math.ceil(totale)}</strong> ${unita}`;
-                }
-                html += `<div class="text-gray-700 flex justify-between border-b border-dashed"><span>${alimento.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}:</span><span class="font-semibold text-green-800 text-right">${displayValue}</span></div>`;
-            });
-            html += '</div>';
-            listaContainer.innerHTML = html;
-        }
-
-        function downloadCSV(csv, filename) {
-            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            if (link.download !== undefined) {
-                const url = URL.createObjectURL(blob);
-                link.setAttribute('href', url);
-                link.setAttribute('download', filename);
-                link.style.visibility = 'hidden';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            }
-        }
-
-        function exportMenuCSV() {
-            const giorni = ['Domenica', 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato'];
-            const sortedDates = Object.keys(menuData).sort();
-            
-            let header = ['Pasto'];
-            sortedDates.forEach(dateString => {
-                const date = new Date(dateString + 'T12:00:00');
-                const formattedDate = date.toLocaleDateString('it-IT');
-                header.push(`${formattedDate} (${giorni[date.getDay()]})`);
-            });
-            
-            let csvRows = [header.join(',')];
-
-            ['colazione', 'pranzo', 'merenda', 'cena'].forEach(pasto => {
-                let row = [pasto.charAt(0).toUpperCase() + pasto.slice(1)];
-                sortedDates.forEach(dateString => {
-                    const alimenti = menuData[dateString][pasto].map(item => {
-                        const nome = item.alimento.replace(/_/g, ' ');
-                        const tipo = item.isCondiment ? ' (cond.)' : '';
-                        return `${nome}${tipo}`;
-                    }).join('; ');
-                    row.push(`"${alimenti}"`);
-                });
-                csvRows.push(row.join(','));
-            });
-
-            downloadCSV(csvRows.join('\n'), 'menu_campo_tabella.csv');
-        }
-
-        function exportSpesaCSV() {
-            const numRagazzi = parseInt(document.getElementById('menuNumRagazzi').value) || 0;
-            const numAdulti = parseInt(document.getElementById('menuNumAdulti').value) || 0;
-            if (numRagazzi <= 0 && numAdulti <= 0) return;
-            
-            const spesaTotale = {};
-            for (const date in menuData) {
-                 for (const pasto in menuData[date]) {
-                    menuData[date][pasto].forEach(item => {
-                        const alimento = item.alimento;
-                        if (!spesaTotale[alimento]) spesaTotale[alimento] = 0;
-                        const multiplier = item.isCondiment ? CONDIMENT_MULTIPLIER : 1;
-                        spesaTotale[alimento] += ((numRagazzi * porzioni[alimento][brancaSelezionata]) + (numAdulti * porzioni[alimento].adulto)) * multiplier;
-                    });
-                }
-            }
-
-            let csvRows = ['Alimento,Quantità,Unità di Misura'];
-            Object.keys(spesaTotale).sort().forEach(alimento => {
-                 const totale = spesaTotale[alimento];
-                 const unita = porzioni[alimento].unita;
-                 let quantita;
-                 let unitaMisura;
-
-                 if (unita === 'g' || unita === 'ml') {
-                     if (totale >= 1000) {
-                         quantita = (totale / 1000).toFixed(2);
-                         unitaMisura = unita === 'g' ? 'kg' : 'L';
-                     } else {
-                         quantita = Math.ceil(totale);
-                         unitaMisura = unita;
-                     }
-                 } else {
-                     quantita = Math.ceil(totale);
-                     unitaMisura = unita;
-                 }
-                 csvRows.push(`"${alimento.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}",${quantita},${unitaMisura}`);
-            });
-            downloadCSV(csvRows.join('\n'), 'lista_spesa.csv');
-        }
+        // --- Other functions (unchanged logic, just moved to be cleaner)
+        function popolaSelectAlimenti(el) { if (!el) return; el.innerHTML = ''; const catOrd = Object.keys(porzioniCategorizzate).sort(); catOrd.forEach(cat => { const og = document.createElement('optgroup'); og.label = cat; const chiaviOrd = Object.keys(porzioniCategorizzate[cat]).sort(); chiaviOrd.forEach(key => { const op = document.createElement('option'); op.value = key; op.textContent = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()); og.appendChild(op); }); el.appendChild(og); }); }
+        function mostraErrore(msg, ctx = 'calcolatore') { const errDiv = document.getElementById(ctx === 'menu' ? 'menuMessaggioErrore' : 'messaggioErrore'); errDiv.textContent = msg; errDiv.classList.toggle('hidden', !msg); }
+        function gestisciClick(e) { const t = e.target.closest('button'); if(t && t.id.startsWith('btnMode')) mostraSezione(t.id.replace('btnMode', '').toLowerCase()); }
+        function popolaSezioni(){ popolaSezioneCalcolatore(); popolaSezioneMenu(); popolaSezioneFabbisogno(); }
+        function mostraSezione(s) { ['calcolatoreSection','fabbisognoSection','menuSection'].forEach(id => document.getElementById(id).classList.add('hidden')); ['btnModeCalcolatore','btnModeFabbisogno','btnModeMenu'].forEach(id => { const btn = document.getElementById(id); btn.classList.remove('active','btn-secondary'); btn.classList.add(id.toLowerCase().includes(s)?'active':'btn-secondary'); }); document.getElementById(s+'Section').classList.remove('hidden'); }
+        function popolaSezioneCalcolatore(){ const c = document.getElementById('calcolatoreSection'); const n = brancaSelezionata === 'lupetto' ? 'N. Lupetti/e' : 'N. Esplo/Guide'; c.innerHTML = `<h2 class="text-2xl font-bold mb-6 text-center">Calcolatore Rapido</h2><div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6"><div><label for="numRagazziCalc" class="block text-sm font-medium mb-1">${n}</label><input type="number" id="numRagazziCalc" class="input-field" placeholder="Es. 20" min="0"></div><div><label for="numAdultiCalc" class="block text-sm font-medium mb-1">N. Adulti</label><input type="number" id="numAdultiCalc" class="input-field" placeholder="Es. 5" min="0"></div><div><label for="alimento" class="block text-sm font-medium mb-1">Alimento</label><select id="alimento" class="input-field"></select></div><div><label for="numPasti" class="block text-sm font-medium mb-1">N. Pasti</label><input type="number" id="numPasti" class="input-field" placeholder="Es. 3" min="1"></div></div><button class="btn btn-primary w-full text-lg" onclick="calcolaQuantita()"><i class="fas fa-calculator mr-2"></i> Calcola</button><div id="risultato" class="mt-8 p-6 hidden"></div><div id="messaggioErrore" class="hidden mt-4 p-4 text-red-800 bg-red-100 border-l-4 border-red-500"></div>`; popolaSelectAlimenti(document.getElementById('alimento')); }
+        function popolaSezioneMenu(){ const c = document.getElementById('menuSection'); const n = brancaSelezionata === 'lupetto' ? 'N. Lupetti/e' : 'N. Esplo/Guide'; c.innerHTML = `<h2 class="text-2xl font-bold mb-6 text-center">Il Tuo Menu</h2><div class="mb-6 p-4 border-2 border-dashed border-dark-green text-sm"><h4 class="font-bold mb-2">Come creare il tuo menu:</h4><ol class="list-decimal list-inside space-y-1"><li><strong>Imposta il campo:</strong> Inserisci partecipanti e date.</li><li><strong>Genera il calendario:</strong> Clicca il pulsante per visualizzare i giorni.</li><li><strong>Seleziona un giorno:</strong> Clicca su una data per aprire l'editor pasti.</li><li><strong>Componi i pasti:</strong> Aggiungi gli alimenti per colazione, pranzo, ecc.</li><li><strong>La lista spesa</strong> e i pulsanti export appariranno in fondo.</li></ol></div><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-end bg-cream p-4 border-2 border-dark-green mb-8"><div><label for="menuNumRagazzi" class="block text-sm font-medium mb-1">${n}</label><input type="number" id="menuNumRagazzi" class="input-field" placeholder="0" min="0"></div><div><label for="menuNumAdulti" class="block text-sm font-medium mb-1">N. Adulti</label><input type="number" id="menuNumAdulti" class="input-field" placeholder="0" min="0"></div><div><label for="startDate" class="block text-sm font-medium mb-1">Data Inizio</label><input type="date" id="startDate" class="input-field"></div><div><label for="endDate" class="block text-sm font-medium mb-1">Data Fine</label><input type="date" id="endDate" class="input-field"></div><div class="lg:col-span-4 flex justify-center items-end mt-4"><button class="btn btn-primary w-full sm:w-auto" onclick="generaCalendario()"><i class="fas fa-cogs mr-2"></i>Genera Calendario</button></div></div><div id="calendarioGridContainer" class="mb-8"></div><div id="editorPastiContainer" class="hidden mt-8"></div><div id="listaSpesaContainer" class="hidden"></div><div id="menuMessaggioErrore" class="hidden mt-4 p-4 text-red-800 bg-red-100 border-l-4 border-red-500"></div><div id="exportContainer" class="mt-8 flex flex-col sm:flex-row justify-center gap-4 hidden"><button class="btn btn-secondary" onclick="exportMenuCSV()"><i class="fas fa-file-csv mr-2"></i> Esporta Menu</button><button class="btn btn-secondary" onclick="exportSpesaCSV()"><i class="fas fa-shopping-cart mr-2"></i> Esporta Spesa</button></div>`; c.querySelector('#calendarioGridContainer').addEventListener('click', gestisciClickGiorno); c.querySelector('#editorPastiContainer').addEventListener('click', gestisciClickEditor); }
+        function popolaSezioneFabbisogno(){ const c = document.getElementById('fabbisognoSection'); const d = brancaSelezionata==='lupetto'?{k:'~ 2100 Kcal',p:'~ 70 g',g:'~ 65 g',c:'~ 275 g'}:{k:'~ 2500 Kcal',p:'~ 85 g',g:'~ 75 g',c:'~ 330 g'}; c.innerHTML = `<h2 class="text-2xl font-bold mb-4 text-center">Fabbisogno Energetico</h2><p class="mb-6 text-center">Valori medi per <strong>${brancaSelezionata==='lupetto'?'Lupetti/Coccinelle':'Esploratori/Guide'}</strong>.</p><div class="overflow-x-auto border-2 border-dark-green"><table class="w-full text-left table-auto"><thead class="border-b-2 border-dark-green"><tr><th class="p-2 font-semibold">Nutriente</th><th class="p-2 font-semibold text-center">Quantità</th></tr></thead><tbody><tr><td class="p-2 font-medium border-t-2 border-dark-green">Fabbisogno Calorico</td><td class="p-2 text-center font-semibold text-lg" style="color:var(--olive-green)">${d.k}</td></tr><tr class="bg-cream"><td class="p-2 font-medium">Proteine</td><td class="p-2 text-center text-lg font-semibold">${d.p}</td></tr><tr><td class="p-2 font-medium">Grassi</td><td class="p-2 text-center text-lg font-semibold">${d.g}</td></tr><tr class="bg-cream"><td class="p-2 font-medium">Carboidrati</td><td class="p-2 text-center text-lg font-semibold">${d.c}</td></tr></tbody></table></div><footer class="text-center mt-6 text-xs"><p>Fonte: Elaborazione su dati LARN (SINU, 2014).</p></footer>`; }
+        function calcolaQuantita(){ const rDiv = document.getElementById('risultato'); rDiv.innerHTML = ''; rDiv.classList.add('hidden'); const nR = parseInt(document.getElementById('numRagazziCalc').value) || 0; const nA = parseInt(document.getElementById('numAdultiCalc').value) || 0; const al = document.getElementById('alimento').value; const nP = parseInt(document.getElementById('numPasti').value) || 0; if((nR<=0&&nA<=0)||nP<=0){mostraErrore("Compila tutti i campi numerici con valori > 0.",'calcolatore');return;} mostraErrore("",'calcolatore'); const pR = porzioni[al][brancaSelezionata]; const pA = porzioni[al]['adulto']; const u = porzioni[al]['unita']; const tot = (nR*pR*nP)+(nA*pA*nP); const nB = brancaSelezionata==='lupetto'?'Lupetti/e':'Esplo/Guide'; let outP=''; if(u==='g'||u==='ml'){outP=tot>=1000?`${(tot/1000).toFixed(2)} ${u==='g'?'kg':'L'}`:`${Math.round(tot)} ${u==='g'?'grammi':'millilitri'}`;}else if(u==='pz'){outP=`${Math.ceil(tot)} pezzi`;} const detP=`(${pR}${u} a testa per ${nB} e ${pA}${u} a testa per Adulti)`; rDiv.innerHTML=`<h3 class="text-2xl font-bold mb-4">Quantità Necessaria</h3><div class="text-sm mb-4">Calcolo per <strong>${nR} ${nB}</strong>, <strong>${nA} Adulti</strong> per <strong>${nP} pasti</strong>.</div><div class="text-3xl font-bold" style="color: var(--olive-green)">${outP}</div><div class="text-base font-semibold mt-1">${detP}</div>`; rDiv.classList.remove('hidden'); }
+        function generaCalendario(resettaDati = true){ const c = document.getElementById('calendarioGridContainer'); const e = document.getElementById('editorPastiContainer'); const l = document.getElementById('listaSpesaContainer'); c.innerHTML=''; e.innerHTML=''; e.classList.add('hidden'); l.classList.add('hidden'); document.getElementById('exportContainer').classList.add('hidden'); giornoSelezionato=null; const sD=new Date(document.getElementById('startDate').value); const eD=new Date(document.getElementById('endDate').value); const nR=parseInt(document.getElementById('menuNumRagazzi').value)||0; const nA=parseInt(document.getElementById('menuNumAdulti').value)||0; mostraErrore('','menu'); if(isNaN(sD)||isNaN(eD)||(nR<=0&&nA<=0)){mostraErrore("Compila tutti i campi: date e numero partecipanti.","menu");return;} if(sD>eD){mostraErrore("La data di inizio non può essere successiva alla data di fine.","menu");return;} if(resettaDati) menuData={}; let curr=new Date(sD); while(curr<=eD){const dS=curr.toISOString().split('T')[0]; if(!menuData[dS])menuData[dS]={colazione:[],pranzo:[],merenda:[],cena:[]}; curr.setDate(curr.getDate()+1);} const mN=sD.toLocaleString('it-IT',{month:'long',year:'numeric'}); c.innerHTML=`<h3 class="text-xl font-bold text-center mb-2 capitalize">${mN}</h3>`; const g=document.createElement('div'); g.className='grid grid-cols-7 text-center'; ['Lun','Mar','Mer','Gio','Ven','Sab','Dom'].forEach(d=>g.innerHTML+=`<div class="font-bold p-1 text-xs sm:p-2 sm:text-base">${d}</div>`); let fD=sD.getDay(); fD=fD===0?6:fD-1; for(let i=0;i<fD;i++)g.innerHTML+='<div></div>'; Object.keys(menuData).forEach(dS=>{const d=new Date(dS+'T12:00:00'); const dC=document.createElement('div'); dC.className='day-cell clickable flex flex-col items-center justify-start text-center'; dC.dataset.date=dS; dC.innerHTML=`<span class="font-bold text-sm sm:text-base">${d.getDate()}</span><div class="meal-icons-container"></div>`; g.appendChild(dC);}); c.appendChild(g); salvaStato(); }
+        function gestisciClickGiorno(e){const t=e.target.closest('.clickable'); if(!t)return; if(giornoSelezionato)giornoSelezionato.classList.remove('selected'); giornoSelezionato=t; giornoSelezionato.classList.add('selected'); mostraEditorPasti(t.dataset.date);}
+        function mostraEditorPasti(dS){const eC=document.getElementById('editorPastiContainer'); const d=new Date(dS+'T12:00:00'); eC.classList.remove('hidden'); eC.innerHTML=`<div class="card bg-cream border-2 border-dark-green"><h3 class="text-xl font-bold text-center mb-4">Modifica Menu per: <span style="color:var(--burnt-orange)">${d.toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long'})}</span></h3><div class="grid grid-cols-1 md:grid-cols-2 gap-4">${['colazione','pranzo','merenda','cena'].map(p=>creaSlotPastoEditor(dS,p)).join('')}</div></div>`; renderPasti(dS);}
+        function creaSlotPastoEditor(dS,tP){const nP={colazione:'Colazione',pranzo:'Pranzo',merenda:'Merenda',cena:'Cena'}; const sCC=(tP==='pranzo'||tP==='cena'); return`<div class="meal-slot p-4 space-y-2 bg-white"><h4 class="font-semibold text-md">${nP[tP]}</h4><ul id="lista-${tP}-${dS}" class="text-sm space-y-1 min-h-[2rem]"></ul><div class="flex gap-2 pt-2 items-center flex-wrap"><select class="input-field text-sm flex-grow" id="select-${tP}-${dS}"></select>${sCC?`<div class="flex items-center gap-1"><input type="checkbox" id="condiment-${tP}-${dS}" class="h-4 w-4 rounded-none border-2 border-dark-green text-olive-green focus:ring-olive-green"><label for="condiment-${tP}-${dS}" class="text-xs">Come condimento</label></div>`:''}<button class="btn btn-primary btn-sm p-2 ml-auto" data-action="add" data-date="${dS}" data-meal="${tP}"><i class="fas fa-plus"></i></button></div></div>`;}
+        function gestisciClickEditor(e){const t=e.target.closest('button'); if(!t)return; const{action,date,meal,index}=t.dataset; let mC=false; if(action==='add'){const s=document.getElementById(`select-${meal}-${date}`); const cC=document.getElementById(`condiment-${meal}-${date}`); const iC=cC?cC.checked:false; if(s.value){menuData[date][meal].push({alimento:s.value,isCondiment:iC});mC=true;}}else if(action==='remove'){menuData[date][meal].splice(index,1);mC=true;} if(mC){renderPasti(date); aggiornaListaSpesa(); aggiornaStatoGiorno(date); salvaStato();}}
+        function renderPasti(dS){Object.keys(menuData[dS]).forEach(p=>{const ul=document.getElementById(`lista-${p}-${dS}`); if(!ul)return; ul.innerHTML=''; menuData[dS][p].forEach((i,idx)=>{const cT=i.isCondiment?'<span class="text-xs ml-1">(cond.)</span>':''; ul.innerHTML+=`<li class="flex justify-between items-center bg-cream p-1"><span>${i.alimento.replace(/_/g,' ')} ${cT}</span><button class="text-burnt-orange hover:text-red-700" data-action="remove" data-date="${dS}" data-meal="${p}" data-index="${idx}"><i class="fas fa-times-circle"></i></button></li>`;}); const s=document.getElementById(`select-${p}-${dS}`); if(s&&!s.childElementCount)popolaSelectAlimenti(s);});}
+        function aggiornaStatoGiorno(dS){if(!menuData[dS])return; const dD=menuData[dS]; const iC=dD.colazione.length>0&&dD.pranzo.length>0&&dD.cena.length>0; const dC=document.querySelector(`.day-cell[data-date="${dS}"]`); if(!dC)return; dC.classList.toggle('complete',iC); const iCo=dC.querySelector('.meal-icons-container'); iCo.innerHTML=''; const icons={colazione:{icon:'fa-mug-saucer',color:''},pranzo:{icon:'fa-utensils',color:''},merenda:{icon:'fa-cookie-bite',color:''},cena:{icon:'fa-moon',color:''}}; Object.keys(icons).forEach(m=>{if(dD[m].length>0){iCo.innerHTML+=`<i class="fas ${icons[m].icon} ${icons[m].color}"></i>`;}});}
+        function aggiornaListaSpesa(){const lC=document.getElementById('listaSpesaContainer'); const eC=document.getElementById('exportContainer'); const nR=parseInt(document.getElementById('menuNumRagazzi').value)||0; const nA=parseInt(document.getElementById('menuNumAdulti').value)||0; if(nR<=0&&nA<=0){lC.classList.add('hidden');eC.classList.add('hidden');return;} const sT={}; for(const d in menuData){for(const p in menuData[d]){menuData[d][p].forEach(i=>{const a=i.alimento; if(!sT[a])sT[a]=0; const m=i.isCondiment?CONDIMENT_MULTIPLIER:1; sT[a]+=((nR*porzioni[a][brancaSelezionata])+(nA*porzioni[a].adulto))*m;});}} if(Object.keys(sT).length===0){lC.innerHTML='<p class="text-center">La tua lista della spesa è vuota. Aggiungi alimenti al menu.</p>';lC.classList.remove('hidden');eC.classList.add('hidden');return;} lC.classList.remove('hidden'); eC.classList.remove('hidden'); let h='<h3 class="text-2xl font-bold mb-4">Lista della Spesa Totale</h3><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-2">'; const kO=Object.keys(sT).sort(); kO.forEach(a=>{const t=sT[a]; const u=porzioni[a].unita; let dV=''; if(u==='g'||u==='ml'){dV=t>=1000?`<strong>${(t/1000).toFixed(2)}</strong> ${u==='g'?'kg':'L'}`:`<strong>${Math.ceil(t)}</strong> ${u}`;}else{dV=`<strong>${Math.ceil(t)}</strong> ${u}`;} h+=`<div class="flex justify-between border-b-2 border-dashed border-dark-green"><span>${a.replace(/_/g,' ').replace(/\b\w/g,l=>l.toUpperCase())}:</span><span class="font-semibold text-right" style="color:var(--olive-green)">${dV}</span></div>`;}); h+='</div>'; lC.innerHTML=h;}
+        function downloadCSV(csv,filename){const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'}); const link=document.createElement('a'); if(link.download!==undefined){const url=URL.createObjectURL(blob); link.setAttribute('href',url); link.setAttribute('download',filename); link.style.visibility='hidden'; document.body.appendChild(link); link.click(); document.body.removeChild(link);}}
+        function exportMenuCSV(){const g=['Domenica','Lunedì','Martedì','Mercoledì','Giovedì','Venerdì','Sabato']; const sD=Object.keys(menuData).sort(); let h=['Pasto']; sD.forEach(dS=>{const d=new Date(dS+'T12:00:00'); const fD=d.toLocaleDateString('it-IT'); h.push(`"${fD} (${g[d.getDay()]})"`);}); let cR=[h.join(',')]; ['colazione','pranzo','merenda','cena'].forEach(p=>{let r=[p.charAt(0).toUpperCase()+p.slice(1)]; sD.forEach(dS=>{const a=menuData[dS][p].map(i=>{const n=i.alimento.replace(/_/g,' '); const t=i.isCondiment?' (cond.)':''; return`${n}${t}`;}).join('; '); r.push(`"${a}"`);}); cR.push(r.join(','));}); downloadCSV(cR.join('\n'),'menu_campo_tabella.csv');}
+        function exportSpesaCSV(){const nR=parseInt(document.getElementById('menuNumRagazzi').value)||0; const nA=parseInt(document.getElementById('menuNumAdulti').value)||0; if(nR<=0&&nA<=0)return; const sT={}; for(const d in menuData){for(const p in menuData[d]){menuData[d][p].forEach(i=>{const a=i.alimento; if(!sT[a])sT[a]=0; const m=i.isCondiment?CONDIMENT_MULTIPLIER:1; sT[a]+=((nR*porzioni[a][brancaSelezionata])+(nA*porzioni[a].adulto))*m;});}} let cR=['Alimento,Quantità,Unità di Misura']; Object.keys(sT).sort().forEach(a=>{const t=sT[a]; const u=porzioni[a].unita; let q; let uM; if(u==='g'||u==='ml'){if(t>=1000){q=(t/1000).toFixed(2); uM=u==='g'?'kg':'L';}else{q=Math.ceil(t); uM=u;}}else{q=Math.ceil(t); uM=u;} cR.push(`"${a.replace(/_/g,' ').replace(/\b\w/g,l=>l.toUpperCase())}",${q},${uM}`);}); downloadCSV(cR.join('\n'),'lista_spesa.csv');}
     </script>
 </body>
 </html>
