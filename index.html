@@ -78,14 +78,12 @@
 <body class="bg-gray-50 flex items-center justify-center min-h-screen py-8">
     <div class="w-full max-w-7xl mx-auto p-4">
         
-        <!-- Welcome Section (Modificata) -->
+        <!-- Welcome Section -->
         <section id="welcomeSection" class="card text-center max-w-3xl mx-auto">
              <h1 class="text-4xl font-bold text-gray-800">Benvenuto nel Calcolatore Cambusa Scout!</h1>
              <p class="text-gray-600 mt-4 max-w-2xl mx-auto">
                 Questo strumento ti aiuta a pianificare la cambusa per i tuoi campi estivi. Puoi fare un calcolo rapido per un singolo alimento, creare un menu giornaliero completo e generare automaticamente la lista della spesa.
              </p>
-             
-             <!-- Disclaimer Integrato -->
              <div class="mt-6 p-4 bg-amber-50 border-l-4 border-amber-400 text-amber-800 text-left rounded-r-lg">
                 <div class="flex">
                     <div class="py-1"><i class="fas fa-exclamation-triangle mr-3 text-amber-500"></i></div>
@@ -97,7 +95,6 @@
                     </div>
                 </div>
             </div>
-
              <p class="text-gray-700 font-semibold mt-8 mb-4 text-xl">Per iniziare, scegli la tua branca:</p>
              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
                 <button class="btn btn-primary text-2xl py-8" onclick="iniziaApplicazione('lupetto')">
@@ -109,7 +106,7 @@
              </div>
         </section>
 
-        <!-- Main Application (Nascosta inizialmente) -->
+        <!-- Main Application -->
         <div id="mainApp" class="hidden">
             <header class="text-center mb-6">
                 <h1 class="text-4xl font-bold text-gray-800">Calcolatore Cambusa Scout</h1>
@@ -122,7 +119,6 @@
                 <button id="btnModeFabbisogno" class="btn btn-toggle btn-secondary" onclick="mostraSezione('fabbisogno')"><i class="fas fa-book-open mr-2"></i> Fabbisogno Energetico</button>
             </div>
 
-            <!-- Sezione Calcolatore (Modificata) -->
             <main id="calcolatoreSection" class="card hidden">
                 <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Calcolatore Rapido per Singolo Alimento</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
@@ -136,7 +132,6 @@
                 <div id="messaggioErrore" class="hidden mt-4 p-4 text-red-800 bg-red-100 border-l-4 border-red-500 rounded-lg"></div>
             </main>
             
-            <!-- Sezione Il Tuo Menu (Modificata) -->
             <section id="menuSection" class="card">
                 <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Crea il Tuo Menu e la Lista della Spesa</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-end bg-gray-50 p-4 rounded-lg mb-8">
@@ -152,14 +147,12 @@
                 <div id="menuMessaggioErrore" class="hidden mt-4 p-4 text-red-800 bg-red-100 border-l-4 border-red-500 rounded-lg"></div>
             </section>
 
-            <!-- Sezione Fabbisogno Energetico -->
             <section id="fabbisognoSection" class="card hidden"></section>
         </div>
 
     </div>
 
     <script>
-        // --- DATABASE PORZIONI ---
         const porzioniCategorizzate = {
             "Carboidrati e Primi Piatti":{pane:{lupetto:60,reparto:90,adulto:110,unita:"g"},pasta:{lupetto:90,reparto:120,adulto:130,unita:"g"},patate:{lupetto:150,reparto:200,adulto:250,unita:"g"},riso:{lupetto:80,reparto:100,adulto:110,unita:"g"},polenta:{lupetto:60,reparto:80,adulto:100,unita:"g"},couscous:{lupetto:60,reparto:90,adulto:100,unita:"g"},crackers:{lupetto:25,reparto:35,adulto:40,unita:"g"}},
             "Carne, Pesce e Uova":{carne_rossa:{lupetto:100,reparto:150,adulto:180,unita:"g"},pesce:{lupetto:150,reparto:200,adulto:220,unita:"g"},pollo:{lupetto:120,reparto:180,adulto:200,unita:"g"},uova:{lupetto:1,reparto:2,adulto:2,unita:"pz"},wurstel:{lupetto:1,reparto:2,adulto:2,unita:"pz"},tonno:{lupetto:50,reparto:80,adulto:100,unita:"g"}},
@@ -173,9 +166,10 @@
         for (const cat in porzioniCategorizzate) Object.assign(porzioni, porzioniCategorizzate[cat]);
         
         // --- STATO GLOBALE ---
-        let brancaSelezionata = null; // 'lupetto' o 'reparto'
+        let brancaSelezionata = null;
         let menuData = {};
         let giornoSelezionato = null;
+        const CONDIMENT_MULTIPLIER = 0.35; // Moltiplicatore per porzioni da condimento
 
         // --- FUNZIONI DI UTILITY E INIZIALIZZAZIONE ---
         function popolaSelectAlimenti(selectElement) {
@@ -223,7 +217,6 @@
             mostraSezione('menu');
         }
 
-        // --- LOGICA DI VISUALIZZAZIONE ---
         function mostraSezione(sezione) {
             ['calcolatoreSection', 'fabbisognoSection', 'menuSection'].forEach(id => document.getElementById(id).classList.add('hidden'));
             ['btnModeCalcolatore', 'btnModeFabbisogno', 'btnModeMenu'].forEach(id => {
@@ -239,10 +232,9 @@
             const datiFabbisogno = brancaSelezionata === 'lupetto' 
                 ? { kcal: '~ 2100 Kcal', proteine: '~ 70 g', grassi: '~ 65 g', carboidrati: '~ 275 g' }
                 : { kcal: '~ 2500 Kcal', proteine: '~ 85 g', grassi: '~ 75 g', carboidrati: '~ 330 g' };
-            container.innerHTML = `<h2 class="text-2xl font-bold text-gray-800 mb-4 text-center">Fabbisogno Energetico di Riferimento</h2><p class="text-gray-600 mb-6 text-center">Valori medi giornalieri per la branca <strong>${brancaSelezionata === 'lupetto' ? 'Lupetti/Coccinelle' : 'Esploratori/Guide'}</strong>.</p><div class="overflow-x-auto"><table class="w-full text-left table-auto"><thead class="bg-gray-100"><tr><th class="text-base font-semibold text-gray-700">Nutriente</th><th class="text-base font-semibold text-gray-700 text-center">Quantità Giornaliera</th></tr></thead><tbody><tr><td class="font-medium text-gray-800">Fabbisogno Calorico</td><td class="text-center font-semibold text-lg text-blue-600">${datiFabbisogno.kcal}</td></tr><tr class="bg-gray-50"><td class="font-medium text-gray-800">Proteine</td><td class="text-center"><div class="gram-value">${datiFabbisogno.proteine}</div></td></tr><tr><td class="font-medium text-gray-800">Grassi</td><td class="text-center"><div class="gram-value">${datiFabbisogno.grassi}</div></td></tr><tr class="bg-gray-50"><td class="font-medium text-gray-800">Carboidrati</td><td class="text-center"><div class="gram-value">${datiFabbisogno.carboidrati}</div></td></tr></tbody></table></div><footer class="text-center mt-6"><p class="text-xs text-gray-500">Fonte: Elaborazione su dati LARN (SINU, 2014).</p></footer>`;
+            container.innerHTML = `<h2 class="text-2xl font-bold text-gray-800 mb-4 text-center">Fabbisogno Energetico di Riferimento</h2><p class="text-gray-600 mb-6 text-center">Valori medi giornalieri per la branca <strong>${brancaSelezionata === 'lupetto' ? 'Lupetti/Coccinelle' : 'Esploratori/Guide'}</strong>.</p><div class="overflow-x-auto"><table class="w-full text-left table-auto"><thead class="bg-gray-100"><tr><th class="text-base font-semibold text-gray-700">Nutriente</th><th class="text-base font-semibold text-gray-700 text-center">Quantità Giornaliera</th></tr></thead><tbody><tr><td class="font-medium text-gray-800">Fabbisogno Calorico</td><td class="text-center font-semibold text-lg text-blue-600">${datiFabbisogno.kcal}</td></tr><tr class="bg-gray-50"><td class="font-medium text-gray-800">Proteine</td><td class="text-center"><div class="text-lg font-semibold text-gray-800">${datiFabbisogno.proteine}</div></td></tr><tr><td class="font-medium text-gray-800">Grassi</td><td class="text-center"><div class="text-lg font-semibold text-gray-800">${datiFabbisogno.grassi}</div></td></tr><tr class="bg-gray-50"><td class="font-medium text-gray-800">Carboidrati</td><td class="text-center"><div class="text-lg font-semibold text-gray-800">${datiFabbisogno.carboidrati}</div></td></tr></tbody></table></div><footer class="text-center mt-6"><p class="text-xs text-gray-500">Fonte: Elaborazione su dati LARN (SINU, 2014).</p></footer>`;
         }
 
-        // --- LOGICA CALCOLATORE VELOCE ---
         function calcolaQuantita() {
             const risultatoDiv = document.getElementById('risultato');
             risultatoDiv.innerHTML = '';
@@ -269,24 +261,17 @@
             if (tipoUnita === 'g' || tipoUnita === 'ml') {
                 outputPrincipale = totaleComplessivo >= 1000 
                     ? `${(totaleComplessivo / 1000).toFixed(2)} ${tipoUnita === 'g' ? 'kg' : 'L'}`
-                    : `${totaleComplessivo} ${tipoUnita === 'g' ? 'grammi' : 'millilitri'}`;
+                    : `${Math.round(totaleComplessivo)} ${tipoUnita === 'g' ? 'grammi' : 'millilitri'}`;
             } else if (tipoUnita === 'pz') {
                  outputPrincipale = `${Math.ceil(totaleComplessivo)} pezzi`;
             }
 
-            // NUOVA LOGICA PER IL DETTAGLIO PORZIONI
             const dettaglioPorzioni = `(${porzioneRagazzo}${tipoUnita} a testa per ${nomeBranca} e ${porzioneAdulto}${tipoUnita} a testa per Adulti)`;
             
-            risultatoDiv.innerHTML = `
-                <h3 class="text-2xl font-bold text-gray-800 mb-4">Quantità Totale Necessaria</h3>
-                <div class="text-sm text-gray-600 mb-4">Calcolo basato su <strong>${numRagazzi} ${nomeBranca}</strong>, <strong>${numAdulti} Adulti</strong> per <strong>${numPasti} pasti</strong>.</div>
-                <div class="text-3xl font-bold text-green-700">${outputPrincipale}</div>
-                <div class="text-base font-semibold text-green-600 mt-1">${dettaglioPorzioni}</div>
-            `;
+            risultatoDiv.innerHTML = `<h3 class="text-2xl font-bold text-gray-800 mb-4">Quantità Totale Necessaria</h3><div class="text-sm text-gray-600 mb-4">Calcolo basato su <strong>${numRagazzi} ${nomeBranca}</strong>, <strong>${numAdulti} Adulti</strong> per <strong>${numPasti} pasti</strong>.</div><div class="text-3xl font-bold text-green-700">${outputPrincipale}</div><div class="text-base font-semibold text-green-600 mt-1">${dettaglioPorzioni}</div>`;
             risultatoDiv.classList.remove('hidden');
         }
         
-        // --- LOGICA MENU PLANNER ---
         function generaCalendario() {
             const container = document.getElementById('calendarioGridContainer');
             const editorContainer = document.getElementById('editorPastiContainer');
@@ -360,7 +345,9 @@
         function creaSlotPastoEditor(dateString, tipoPasto) {
             const nomiPasti = { colazione: 'Colazione', pranzo: 'Pranzo', merenda: 'Merenda', cena: 'Cena' };
             const isMerenda = tipoPasto === 'merenda';
-            return `<div class="meal-slot ${isMerenda ? 'merenda p-2' : 'p-4'} rounded-lg space-y-2 bg-white shadow-sm"><h4 class="font-semibold ${isMerenda ? 'text-sm' : 'text-md'} text-gray-700">${nomiPasti[tipoPasto]}</h4><ul id="lista-${tipoPasto}-${dateString}" class="text-sm space-y-1 min-h-[2rem]"></ul><div class="flex gap-2 pt-2"><select class="input-field text-sm flex-grow" id="select-${tipoPasto}-${dateString}"></select><button class="btn btn-primary btn-sm p-2" data-action="add" data-date="${dateString}" data-meal="${tipoPasto}"><i class="fas fa-plus"></i></button></div></div>`;
+            const showCondimentCheckbox = (tipoPasto === 'pranzo' || tipoPasto === 'cena');
+
+            return `<div class="meal-slot ${isMerenda ? 'merenda p-2' : 'p-4'} rounded-lg space-y-2 bg-white shadow-sm"><h4 class="font-semibold ${isMerenda ? 'text-sm' : 'text-md'} text-gray-700">${nomiPasti[tipoPasto]}</h4><ul id="lista-${tipoPasto}-${dateString}" class="text-sm space-y-1 min-h-[2rem]"></ul><div class="flex gap-2 pt-2 items-center flex-wrap"><select class="input-field text-sm flex-grow" id="select-${tipoPasto}-${dateString}"></select>${showCondimentCheckbox ? `<div class="flex items-center gap-1"><input type="checkbox" id="condiment-${tipoPasto}-${dateString}" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"><label for="condiment-${tipoPasto}-${dateString}" class="text-xs text-gray-600">Come condimento</label></div>` : ''}<button class="btn btn-primary btn-sm p-2 ml-auto" data-action="add" data-date="${dateString}" data-meal="${tipoPasto}"><i class="fas fa-plus"></i></button></div></div>`;
         }
 
         function gestisciClickEditor(event) {
@@ -370,7 +357,12 @@
             let menuCambiato = false;
             if (action === 'add') {
                 const select = document.getElementById(`select-${meal}-${date}`);
-                if (select.value) { menuData[date][meal].push(select.value); menuCambiato = true; }
+                const condimentCheckbox = document.getElementById(`condiment-${meal}-${date}`);
+                const isCondiment = condimentCheckbox ? condimentCheckbox.checked : false;
+                if (select.value) { 
+                    menuData[date][meal].push({alimento: select.value, isCondiment: isCondiment}); 
+                    menuCambiato = true; 
+                }
             } else if (action === 'remove') {
                 menuData[date][meal].splice(index, 1);
                 menuCambiato = true;
@@ -387,8 +379,9 @@
                 const ul = document.getElementById(`lista-${pasto}-${dateString}`);
                 if (!ul) return;
                 ul.innerHTML = '';
-                menuData[dateString][pasto].forEach((alimento, index) => {
-                    ul.innerHTML += `<li class="flex justify-between items-center bg-gray-100 p-1 rounded"><span>${alimento.replace(/_/g, ' ')}</span><button class="text-red-500 hover:text-red-700" data-action="remove" data-date="${dateString}" data-meal="${pasto}" data-index="${index}"><i class="fas fa-times-circle"></i></button></li>`;
+                menuData[dateString][pasto].forEach((item, index) => {
+                    const condimentTag = item.isCondiment ? '<span class="text-xs text-gray-500 ml-1">(cond.)</span>' : '';
+                    ul.innerHTML += `<li class="flex justify-between items-center bg-gray-100 p-1 rounded"><span>${item.alimento.replace(/_/g, ' ')} ${condimentTag}</span><button class="text-red-500 hover:text-red-700" data-action="remove" data-date="${dateString}" data-meal="${pasto}" data-index="${index}"><i class="fas fa-times-circle"></i></button></li>`;
                 });
                 const select = document.getElementById(`select-${pasto}-${dateString}`);
                 if (select && !select.childElementCount) popolaSelectAlimenti(select);
@@ -413,10 +406,14 @@
             const spesaTotale = {};
             for (const date in menuData) {
                 for (const pasto in menuData[date]) {
-                    menuData[date][pasto].forEach(alimento => {
+                    menuData[date][pasto].forEach(item => {
+                        const alimento = item.alimento;
                         if (!spesaTotale[alimento]) spesaTotale[alimento] = 0;
-                        const porzioneRagazzo = porzioni[alimento][brancaSelezionata];
-                        const porzioneAdulto = porzioni[alimento].adulto;
+                        
+                        const multiplier = item.isCondiment ? CONDIMENT_MULTIPLIER : 1;
+                        const porzioneRagazzo = porzioni[alimento][brancaSelezionata] * multiplier;
+                        const porzioneAdulto = porzioni[alimento].adulto * multiplier;
+                        
                         spesaTotale[alimento] += (numRagazzi * porzioneRagazzo) + (numAdulti * porzioneAdulto);
                     });
                 }
