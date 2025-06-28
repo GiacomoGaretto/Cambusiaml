@@ -63,8 +63,10 @@
         /* Stili per il calendario */
         .day-cell {
             border: 1px solid #e5e7eb;
-            height: 5rem;
+            min-height: 6rem;
             transition: all 0.2s ease;
+            position: relative;
+            padding: 0.25rem;
         }
         .day-cell.clickable { cursor: pointer; }
         .day-cell.clickable:hover { background-color: #eff6ff; }
@@ -73,6 +75,14 @@
         .day-cell.complete { background-color: #dcfce7; color: #15803d; font-weight: bold; border-color: #86efac; }
         .day-cell.complete:hover { background-color: #bbf7d0; }
         .day-cell.selected.complete { background-color: #a7f3d0; outline-color: #16a34a; }
+        .meal-icons-container {
+            position: absolute;
+            bottom: 4px;
+            left: 4px;
+            display: flex;
+            gap: 4px;
+            font-size: 0.75rem; /* 12px */
+        }
     </style>
 </head>
 <body class="bg-gray-50 flex items-center justify-center min-h-screen py-8">
@@ -119,34 +129,8 @@
                 <button id="btnModeFabbisogno" class="btn btn-toggle btn-secondary" onclick="mostraSezione('fabbisogno')"><i class="fas fa-book-open mr-2"></i> Fabbisogno Energetico</button>
             </div>
 
-            <main id="calcolatoreSection" class="card hidden">
-                <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Calcolatore Rapido per Singolo Alimento</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                    <div><label id="labelRagazziCalc" for="numRagazziCalc" class="block text-sm font-medium text-gray-700 mb-1">Numero Partecipanti</label><input type="number" id="numRagazziCalc" class="input-field" placeholder="Es. 20" min="0"></div>
-                    <div><label for="numAdultiCalc" class="block text-sm font-medium text-gray-700 mb-1">Numero Adulti</label><input type="number" id="numAdultiCalc" class="input-field" placeholder="Es. 5" min="0"></div>
-                    <div><label for="alimento" class="block text-sm font-medium text-gray-700 mb-1">Tipo di Alimento</label><select id="alimento" class="input-field"></select></div>
-                    <div><label for="numPasti" class="block text-sm font-medium text-gray-700 mb-1">Numero di Pasti</label><input type="number" id="numPasti" class="input-field" placeholder="Es. 3" min="1"></div>
-                </div>
-                <button class="btn btn-primary w-full text-lg" onclick="calcolaQuantita()"><i class="fas fa-calculator mr-2"></i> Calcola Quantità</button>
-                <div id="risultato" class="mt-8 p-6 rounded-lg hidden"></div>
-                <div id="messaggioErrore" class="hidden mt-4 p-4 text-red-800 bg-red-100 border-l-4 border-red-500 rounded-lg"></div>
-            </main>
-            
-            <section id="menuSection" class="card">
-                <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Crea il Tuo Menu e la Lista della Spesa</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-end bg-gray-50 p-4 rounded-lg mb-8">
-                    <div><label id="labelRagazziMenu" for="menuNumRagazzi" class="block text-sm font-medium text-gray-700 mb-1">N. Partecipanti</label><input type="number" id="menuNumRagazzi" class="input-field" placeholder="0" min="0"></div>
-                    <div><label for="menuNumAdulti" class="block text-sm font-medium text-gray-700 mb-1">N. Adulti</label><input type="number" id="menuNumAdulti" class="input-field" placeholder="0" min="0"></div>
-                    <div><label for="startDate" class="block text-sm font-medium text-gray-700 mb-1">Data Inizio</label><input type="date" id="startDate" class="input-field"></div>
-                    <div><label for="endDate" class="block text-sm font-medium text-gray-700 mb-1">Data Fine</label><input type="date" id="endDate" class="input-field"></div>
-                    <div class="lg:col-span-4 flex justify-center items-end mt-4"><button class="btn btn-primary w-full sm:w-auto" onclick="generaCalendario()"><i class="fas fa-cogs mr-2"></i>Genera Calendario</button></div>
-                </div>
-                <div id="calendarioGridContainer" class="mb-8"></div>
-                <div id="editorPastiContainer" class="hidden mt-8"></div>
-                <div id="listaSpesaContainer" class="rounded-lg hidden"></div>
-                <div id="menuMessaggioErrore" class="hidden mt-4 p-4 text-red-800 bg-red-100 border-l-4 border-red-500 rounded-lg"></div>
-            </section>
-
+            <main id="calcolatoreSection" class="card hidden"></main>
+            <section id="menuSection" class="card"></section>
             <section id="fabbisognoSection" class="card hidden"></section>
         </div>
 
@@ -165,13 +149,11 @@
         const porzioni = {};
         for (const cat in porzioniCategorizzate) Object.assign(porzioni, porzioniCategorizzate[cat]);
         
-        // --- STATO GLOBALE ---
         let brancaSelezionata = null;
         let menuData = {};
         let giornoSelezionato = null;
-        const CONDIMENT_MULTIPLIER = 0.35; // Moltiplicatore per porzioni da condimento
+        const CONDIMENT_MULTIPLIER = 0.35;
 
-        // --- FUNZIONI DI UTILITY E INIZIALIZZAZIONE ---
         function popolaSelectAlimenti(selectElement) {
             if (!selectElement) return;
             selectElement.innerHTML = '';
@@ -196,10 +178,20 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('calendarioGridContainer').addEventListener('click', gestisciClickGiorno);
-            document.getElementById('editorPastiContainer').addEventListener('click', gestisciClickEditor);
+            document.getElementById('mainApp').addEventListener('click', gestisciClick);
         });
+        
+        function gestisciClick(event){
+            const target = event.target.closest('button');
+            if(!target) return;
+            const id = target.id;
 
+            if (id.startsWith('btnMode')) {
+                const section = id.replace('btnMode', '').toLowerCase();
+                mostraSezione(section);
+            }
+        }
+        
         function iniziaApplicazione(branca) {
             brancaSelezionata = branca;
             document.getElementById('welcomeSection').classList.add('hidden');
@@ -208,13 +200,14 @@
             const nomeBranca = branca === 'lupetto' ? 'Lupetti / Coccinelle' : 'Esploratori / Guide';
             document.getElementById('modalitaAttiva').innerHTML = `Modalità Attiva: <span class="text-green-700">${nomeBranca}</span>`;
             
-            const nomePartecipanti = branca === 'lupetto' ? 'N. Lupetti/e' : 'N. Esplo/Guide';
-            document.getElementById('labelRagazziCalc').textContent = nomePartecipanti;
-            document.getElementById('labelRagazziMenu').textContent = nomePartecipanti;
-
-            popolaSelectAlimenti(document.getElementById('alimento'));
-            popolaSezioneFabbisogno();
+            popolaSezioni();
             mostraSezione('menu');
+        }
+
+        function popolaSezioni(){
+             popolaSezioneCalcolatore();
+             popolaSezioneMenu();
+             popolaSezioneFabbisogno();
         }
 
         function mostraSezione(sezione) {
@@ -225,6 +218,21 @@
                 btn.classList.add(id.toLowerCase().includes(sezione) ? 'active' : 'btn-secondary');
             });
             document.getElementById(sezione + 'Section').classList.remove('hidden');
+        }
+        
+        function popolaSezioneCalcolatore(){
+             const container = document.getElementById('calcolatoreSection');
+             const nomePartecipanti = brancaSelezionata === 'lupetto' ? 'N. Lupetti/e' : 'N. Esplo/Guide';
+             container.innerHTML = `<h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Calcolatore Rapido per Singolo Alimento</h2><div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6"><div><label for="numRagazziCalc" class="block text-sm font-medium text-gray-700 mb-1">${nomePartecipanti}</label><input type="number" id="numRagazziCalc" class="input-field" placeholder="Es. 20" min="0"></div><div><label for="numAdultiCalc" class="block text-sm font-medium text-gray-700 mb-1">Numero Adulti</label><input type="number" id="numAdultiCalc" class="input-field" placeholder="Es. 5" min="0"></div><div><label for="alimento" class="block text-sm font-medium text-gray-700 mb-1">Tipo di Alimento</label><select id="alimento" class="input-field"></select></div><div><label for="numPasti" class="block text-sm font-medium text-gray-700 mb-1">Numero di Pasti</label><input type="number" id="numPasti" class="input-field" placeholder="Es. 3" min="1"></div></div><button class="btn btn-primary w-full text-lg" onclick="calcolaQuantita()"><i class="fas fa-calculator mr-2"></i> Calcola Quantità</button><div id="risultato" class="mt-8 p-6 rounded-lg hidden"></div><div id="messaggioErrore" class="hidden mt-4 p-4 text-red-800 bg-red-100 border-l-4 border-red-500 rounded-lg"></div>`;
+             popolaSelectAlimenti(document.getElementById('alimento'));
+        }
+
+        function popolaSezioneMenu() {
+            const container = document.getElementById('menuSection');
+            const nomePartecipanti = brancaSelezionata === 'lupetto' ? 'N. Lupetti/e' : 'N. Esplo/Guide';
+            container.innerHTML = `<h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Crea il Tuo Menu e la Lista della Spesa</h2><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-end bg-gray-50 p-4 rounded-lg mb-8"><div><label for="menuNumRagazzi" class="block text-sm font-medium text-gray-700 mb-1">${nomePartecipanti}</label><input type="number" id="menuNumRagazzi" class="input-field" placeholder="0" min="0"></div><div><label for="menuNumAdulti" class="block text-sm font-medium text-gray-700 mb-1">N. Adulti</label><input type="number" id="menuNumAdulti" class="input-field" placeholder="0" min="0"></div><div><label for="startDate" class="block text-sm font-medium text-gray-700 mb-1">Data Inizio</label><input type="date" id="startDate" class="input-field"></div><div><label for="endDate" class="block text-sm font-medium text-gray-700 mb-1">Data Fine</label><input type="date" id="endDate" class="input-field"></div><div class="lg:col-span-4 flex justify-center items-end mt-4"><button class="btn btn-primary w-full sm:w-auto" onclick="generaCalendario()"><i class="fas fa-cogs mr-2"></i>Genera Calendario</button></div></div><div id="calendarioGridContainer" class="mb-8"></div><div id="editorPastiContainer" class="hidden mt-8"></div><div id="listaSpesaContainer" class="rounded-lg hidden"></div><div id="menuMessaggioErrore" class="hidden mt-4 p-4 text-red-800 bg-red-100 border-l-4 border-red-500 rounded-lg"></div><div id="exportContainer" class="mt-8 flex justify-center gap-4 hidden"><button class="btn btn-secondary" onclick="exportMenuCSV()"><i class="fas fa-file-csv mr-2"></i> Esporta Menu (CSV)</button><button class="btn btn-secondary" onclick="exportSpesaCSV()"><i class="fas fa-shopping-cart mr-2"></i> Esporta Lista Spesa (CSV)</button></div>`;
+            container.querySelector('#calendarioGridContainer').addEventListener('click', gestisciClickGiorno);
+            container.querySelector('#editorPastiContainer').addEventListener('click', gestisciClickEditor);
         }
 
         function popolaSezioneFabbisogno() {
@@ -280,6 +288,7 @@
             editorContainer.innerHTML = '';
             editorContainer.classList.add('hidden');
             listaSpesaCont.classList.add('hidden');
+            document.getElementById('exportContainer').classList.add('hidden');
             giornoSelezionato = null;
 
             const startDate = new Date(document.getElementById('startDate').value);
@@ -317,9 +326,9 @@
             Object.keys(menuData).forEach(dateString => {
                 const date = new Date(dateString + 'T12:00:00');
                 const dayCell = document.createElement('div');
-                dayCell.className = 'day-cell clickable flex items-center justify-center';
+                dayCell.className = 'day-cell clickable flex flex-col items-center justify-start';
                 dayCell.dataset.date = dateString;
-                dayCell.textContent = date.getDate();
+                dayCell.innerHTML = `<span class="font-bold">${date.getDate()}</span><div class="meal-icons-container"></div>`;
                 grid.appendChild(dayCell);
             });
             container.appendChild(grid);
@@ -393,15 +402,38 @@
             const dayData = menuData[dateString];
             const isComplete = dayData.colazione.length > 0 && dayData.pranzo.length > 0 && dayData.cena.length > 0;
             const dayCell = document.querySelector(`.day-cell[data-date="${dateString}"]`);
-            if (dayCell) dayCell.classList.toggle('complete', isComplete);
+            if (!dayCell) return;
+            
+            dayCell.classList.toggle('complete', isComplete);
+            
+            const iconsContainer = dayCell.querySelector('.meal-icons-container');
+            iconsContainer.innerHTML = '';
+            
+            const icons = {
+                colazione: {icon: 'fa-mug-saucer', color: 'text-yellow-600'},
+                pranzo: {icon: 'fa-utensils', color: 'text-red-600'},
+                merenda: {icon: 'fa-cookie-bite', color: 'text-orange-500'},
+                cena: {icon: 'fa-moon', color: 'text-indigo-600'}
+            };
+            
+            Object.keys(icons).forEach(meal => {
+                if(dayData[meal].length > 0){
+                    iconsContainer.innerHTML += `<i class="fas ${icons[meal].icon} ${icons[meal].color}"></i>`;
+                }
+            });
         }
         
         function aggiornaListaSpesa() {
             const listaContainer = document.getElementById('listaSpesaContainer');
+            const exportContainer = document.getElementById('exportContainer');
             const numRagazzi = parseInt(document.getElementById('menuNumRagazzi').value) || 0;
             const numAdulti = parseInt(document.getElementById('menuNumAdulti').value) || 0;
 
-            if (numRagazzi <= 0 && numAdulti <= 0) { listaContainer.classList.add('hidden'); return; }
+            if (numRagazzi <= 0 && numAdulti <= 0) {
+                 listaContainer.classList.add('hidden');
+                 exportContainer.classList.add('hidden');
+                 return;
+            }
 
             const spesaTotale = {};
             for (const date in menuData) {
@@ -409,12 +441,8 @@
                     menuData[date][pasto].forEach(item => {
                         const alimento = item.alimento;
                         if (!spesaTotale[alimento]) spesaTotale[alimento] = 0;
-                        
                         const multiplier = item.isCondiment ? CONDIMENT_MULTIPLIER : 1;
-                        const porzioneRagazzo = porzioni[alimento][brancaSelezionata] * multiplier;
-                        const porzioneAdulto = porzioni[alimento].adulto * multiplier;
-                        
-                        spesaTotale[alimento] += (numRagazzi * porzioneRagazzo) + (numAdulti * porzioneAdulto);
+                        spesaTotale[alimento] += ((numRagazzi * porzioni[alimento][brancaSelezionata]) + (numAdulti * porzioni[alimento].adulto)) * multiplier;
                     });
                 }
             }
@@ -422,9 +450,11 @@
             if (Object.keys(spesaTotale).length === 0) {
                  listaContainer.innerHTML = '<p class="text-center text-gray-500">La tua lista della spesa è vuota. Aggiungi alimenti al menu.</p>';
                  listaContainer.classList.remove('hidden');
+                 exportContainer.classList.add('hidden');
                  return;
             }
             listaContainer.classList.remove('hidden');
+            exportContainer.classList.remove('hidden');
             let html = '<h3 class="text-2xl font-bold text-gray-800 mb-4">Lista della Spesa Totale</h3><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-2">';
             const chiaviOrdinate = Object.keys(spesaTotale).sort();
             chiaviOrdinate.forEach(alimento => {
@@ -440,6 +470,90 @@
             });
             html += '</div>';
             listaContainer.innerHTML = html;
+        }
+
+        function downloadCSV(csv, filename) {
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            if (link.download !== undefined) {
+                const url = URL.createObjectURL(blob);
+                link.setAttribute('href', url);
+                link.setAttribute('download', filename);
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        }
+
+        function exportMenuCSV() {
+            const giorni = ['Domenica', 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato'];
+            const sortedDates = Object.keys(menuData).sort();
+            
+            let header = ['Pasto'];
+            sortedDates.forEach(dateString => {
+                const date = new Date(dateString + 'T12:00:00');
+                const formattedDate = date.toLocaleDateString('it-IT');
+                header.push(`${formattedDate} (${giorni[date.getDay()]})`);
+            });
+            
+            let csvRows = [header.join(',')];
+
+            ['colazione', 'pranzo', 'merenda', 'cena'].forEach(pasto => {
+                let row = [pasto.charAt(0).toUpperCase() + pasto.slice(1)];
+                sortedDates.forEach(dateString => {
+                    const alimenti = menuData[dateString][pasto].map(item => {
+                        const nome = item.alimento.replace(/_/g, ' ');
+                        const tipo = item.isCondiment ? ' (cond.)' : '';
+                        return `${nome}${tipo}`;
+                    }).join('; '); // Usiamo il punto e virgola per separare gli alimenti
+                    row.push(`"${alimenti}"`);
+                });
+                csvRows.push(row.join(','));
+            });
+
+            downloadCSV(csvRows.join('\n'), 'menu_campo_tabella.csv');
+        }
+
+        function exportSpesaCSV() {
+            const numRagazzi = parseInt(document.getElementById('menuNumRagazzi').value) || 0;
+            const numAdulti = parseInt(document.getElementById('menuNumAdulti').value) || 0;
+            if (numRagazzi <= 0 && numAdulti <= 0) return;
+            
+            const spesaTotale = {};
+            for (const date in menuData) {
+                 for (const pasto in menuData[date]) {
+                    menuData[date][pasto].forEach(item => {
+                        const alimento = item.alimento;
+                        if (!spesaTotale[alimento]) spesaTotale[alimento] = 0;
+                        const multiplier = item.isCondiment ? CONDIMENT_MULTIPLIER : 1;
+                        spesaTotale[alimento] += ((numRagazzi * porzioni[alimento][brancaSelezionata]) + (numAdulti * porzioni[alimento].adulto)) * multiplier;
+                    });
+                }
+            }
+
+            let csvRows = ['Alimento,Quantità,Unità di Misura'];
+            Object.keys(spesaTotale).sort().forEach(alimento => {
+                 const totale = spesaTotale[alimento];
+                 const unita = porzioni[alimento].unita;
+                 let quantita;
+                 let unitaMisura;
+
+                 if (unita === 'g' || unita === 'ml') {
+                     if (totale >= 1000) {
+                         quantita = (totale / 1000).toFixed(2);
+                         unitaMisura = unita === 'g' ? 'kg' : 'L';
+                     } else {
+                         quantita = Math.ceil(totale);
+                         unitaMisura = unita;
+                     }
+                 } else {
+                     quantita = Math.ceil(totale);
+                     unitaMisura = unita;
+                 }
+                 csvRows.push(`"${alimento.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}",${quantita},${unitaMisura}`);
+            });
+            downloadCSV(csvRows.join('\n'), 'lista_spesa.csv');
         }
     </script>
 </body>
