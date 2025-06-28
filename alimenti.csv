@@ -1,0 +1,47 @@
+id,nome_visualizzato,categoria,lupetto,reparto,adulto,unita
+pane,Pane,Carboidrati - Primi Piatti,60,90,110,g
+pasta,Pasta,Carboidrati - Primi Piatti,90,100,120,g
+patate,Patate,Carboidrati - Primi Piatti,150,200,250,g
+riso,Riso,Carboidrati - Primi Piatti,60,80,90,g
+polenta,Polenta,Carboidrati - Primi Piatti,60,80,90,g
+couscous,Couscous,Carboidrati - Primi Piatti,60,80,90,g
+crackers,Crackers,Carboidrati - Primi Piatti,25,35,40,g
+carne_rossa,Carne Rossa,Carne - Pesce - Uova,100,150,180,g
+pesce,Pesce,Carne - Pesce - Uova,150,200,220,g
+pollo,Pollo,Carne - Pesce - Uova,120,180,200,g
+uova,Uova,Carne - Pesce - Uova,1,2,2,pz
+wurstel,Wurstel,Carne - Pesce - Uova,1,2,2,pz
+tonno,Tonno,Carne - Pesce - Uova,50,80,100,g
+fagioli,Fagioli,Verdura - Legumi,50,70,80,g
+piselli,Piselli,Verdura - Legumi,80,100,120,g
+pomodori,Pomodori,Verdura - Legumi,120,150,180,g
+insalata,Insalata,Verdura - Legumi,70,90,100,g
+carote,Carote,Verdura - Legumi,100,130,150,g
+cipolle,Cipolle,Verdura - Legumi,30,40,50,g
+zucchine,Zucchine,Verdura - Legumi,120,160,180,g
+melanzane,Melanzane,Verdura - Legumi,120,160,180,g
+peperoni,Peperoni,Verdura - Legumi,100,140,160,g
+legumi_secchi,Legumi Secchi,Verdura - Legumi,40,60,70,g
+passata_pomodoro,Passata Pomodoro,Verdura - Legumi,60,80,100,g
+mela,Mela,Frutta,1,1,1,pz
+banana,Banana,Frutta,1,1,1,pz
+pesca,Pesca,Frutta,1,1,1,pz
+anguria,Anguria,Frutta,200,300,400,g
+albicocca,Albicocca,Frutta,2,3,3,pz
+pera,Pera,Frutta,1,1,1,pz
+frutta_mista,Frutta Mista,Frutta,150,200,250,g
+latte,Latte,Latticini - Formaggi,200,250,250,ml
+yogurt,Yogurt,Latticini - Formaggi,1,1,1,pz
+formaggio_fresco,Formaggio Fresco,Latticini - Formaggi,70,100,120,g
+formaggio_stagionato,Formaggio Stagionato,Latticini - Formaggi,40,50,60,g
+mozzarella,Mozzarella,Latticini - Formaggi,80,100,120,g
+biscotti,Biscotti,Dolci - Extra,40,60,50,g
+cereali_colazione,Cereali Colazione,Dolci - Extra,30,50,50,g
+fette_biscottate,Fette Biscottate,Dolci - Extra,3,4,4,pz
+marmellata,Marmellata,Dolci - Extra,20,30,30,g
+miele,Miele,Dolci - Extra,15,20,20,g
+cioccolato,Cioccolato,Dolci - Extra,20,30,30,g
+cacao,Cacao,Dolci - Extra,5,7,10,g
+olio,Olio,Condimenti,10,15,20,ml
+sale,Sale,Condimenti,3,5,5,g
+burro,Burro,Condimenti,10,15,20,g
